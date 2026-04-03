@@ -1,0 +1,37 @@
+{
+  "Common": {
+    "add": "Añadir",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito"
+  },
+  "Menu": {
+    "title": "Nuestra Carta",
+    "description": "Explora nuestras delicias preparadas con pasión.",
+    "categories": "Categorías",
+    "noItems": "No hay platos disponibles en esta sección.",
+    "viewOrder": "Tu Pedido",
+    "confirmOrder": "Confirmar mi Pedido",
+    "total": "Total de la cuenta",
+    "emptyCart": "Aún no has añadido platos.",
+    "clear": "Vaciar",
+    "ordered": "¡Pedido Enviado!",
+    "orderedDesc": "Muestra esta pantalla al personal si tienes alguna duda.",
+    "table": "Número de Mesa",
+    "tablePlaceholder": "Ej. 5",
+    "whatsappTemplate": "¡Hola! Mi pedido en {restaurant}: \n\n{items}\n\n*Total: {total}*\n*Mesa: {table}*"
+  },
+  "Dashboard": {
+    "welcome": "Bienvenido a Kartá",
+    "stats": "Analíticas",
+    "myMenu": "Mi Menú",
+    "qrGenerator": "Generador QR",
+    "settings": "Ajustes",
+    "logout": "Cerrar Sesión",
+    "views": "Visitas",
+    "popular": "Platos Populares",
+    "activeItems": "Platos Activos"
+  }
+}

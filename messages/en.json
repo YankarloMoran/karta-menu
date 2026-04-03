@@ -1,0 +1,37 @@
+{
+  "Common": {
+    "add": "Add",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success"
+  },
+  "Menu": {
+    "title": "Our Menu",
+    "description": "Explore our delights prepared with passion.",
+    "categories": "Categories",
+    "noItems": "No items available in this section.",
+    "viewOrder": "Your Order",
+    "confirmOrder": "Confirm my Order",
+    "total": "Total balance",
+    "emptyCart": "You haven't added any items yet.",
+    "clear": "Clear",
+    "ordered": "Order Sent!",
+    "orderedDesc": "Show this screen to the staff if you have any questions.",
+    "table": "Table Number",
+    "tablePlaceholder": "e.g. 5",
+    "whatsappTemplate": "Hi! My order at {restaurant}: \n\n{items}\n\n*Total: {total}*\n*Table: {table}*"
+  },
+  "Dashboard": {
+    "welcome": "Welcome to Kartá",
+    "stats": "Analytics",
+    "myMenu": "My Menu",
+    "qrGenerator": "QR Generator",
+    "settings": "Settings",
+    "logout": "Logout",
+    "views": "Views",
+    "popular": "Popular Dishes",
+    "activeItems": "Active Items"
+  }
+}
