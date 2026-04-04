@@ -99,7 +99,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className='py-12 border-t border-white/5 text-center'>
-        <p className='text-sm text-foreground/40'>Â© 2026 KartÃ¡. El estÃ¡ndar de oro para menÃºs digitales.</p>
+        <p className='text-sm text-foreground/40'>© 2026 Kartá. El estándar de oro para menús digitales.</p>
       </footer>
     </div>
   );
