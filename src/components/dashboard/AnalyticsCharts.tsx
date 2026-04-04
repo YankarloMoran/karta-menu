@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { 
   LineChart, 
@@ -16,9 +16,7 @@ import { motion } from 'framer-motion';
 export default function AnalyticsCharts({ data }: { data: any[] }) {
   if (!data || data.length === 0) {
     return (
-      <div className='h-64 flex items-center justify-center glass rounded-3xl opacity-40 italic'>
-        <p>AÃºn no hay suficientes datos para las grÃ¡ficas.</p>
-      </div>
+        <p>Aún no hay suficientes datos para las gráficas.</p>
     );
   }
 
@@ -28,7 +26,7 @@ export default function AnalyticsCharts({ data }: { data: any[] }) {
       animate={{ opacity: 1, y: 0 }}
       className='w-full h-80 glass p-6 rounded-[32px] border border-white/5'
     >
-      <h3 className='text-lg font-serif font-bold mb-6 text-foreground/60 px-2'>TrÃ¡fico del Restaurante (7 dÃ­as)</h3>
+      <h3 className='text-lg font-serif font-bold mb-6 text-foreground/60 px-2'>Tráfico del Restaurante (7 días)</h3>
       <ResponsiveContainer width='100%' height='85%'>
         <AreaChart data={data}>
           <defs>

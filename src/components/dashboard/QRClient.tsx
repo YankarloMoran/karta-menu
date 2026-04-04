@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { QRCodeSVG } from 'qrcode.react';
 import { Download, Share2, ExternalLink } from 'lucide-react';
@@ -39,8 +39,8 @@ export default function QRClient({
   return (
     <div className='max-w-4xl mx-auto space-y-10'>
       <div>
-        <h1 className='text-4xl font-serif font-bold mb-2 text-gradient-ember'>Tu CÃ³digo QR</h1>
-        <p className='text-foreground/60'>Tus clientes podrÃ¡n escanear este cÃ³digo para ver tu menÃº digital.</p>
+        <h1 className='text-4xl font-serif font-bold mb-2 text-gradient-ember'>Tu Código QR</h1>
+        <p className='text-foreground/60'>Tus clientes podrán escanear este código para ver tu menú digital.</p>
       </div>
 
       <div className='grid md:grid-cols-2 gap-10 items-start'>
@@ -76,7 +76,7 @@ export default function QRClient({
             <h3 className='text-lg font-bold flex items-center gap-2'>
               <Download size={20} className='text-primary' /> Acciones Profesionales
             </h3>
-            <p className='text-sm text-foreground/60'>Descarga tu cÃ³digo en alta resoluciÃ³n para tus mesas fÃ­sicas.</p>
+            <p className='text-sm text-foreground/60'>Descarga tu código en alta resolución para tus mesas físicas.</p>
             
             <div className='grid grid-cols-1 gap-3 pt-4'>
               <button 
@@ -89,7 +89,7 @@ export default function QRClient({
                 className='w-full glass py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/5 transition-colors border border-white/5'
                 onClick={() => window.open(publicUrl, '_blank')}
               >
-                <ExternalLink size={18} /> Ver mi MenÃº PÃºblico
+                <ExternalLink size={18} /> Ver mi Menú Público
               </button>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function QRClient({
                 className='bg-primary/10 text-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors'
                 onClick={() => {
                   navigator.clipboard.writeText(publicUrl);
-                  alert('Â¡Enlace copiado!');
+                  alert('¡Enlace copiado!');
                 }}
               >
                 Copiar

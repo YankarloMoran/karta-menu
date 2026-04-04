@@ -66,7 +66,7 @@ export default async function RegisterPage({
                   type='password'
                   name='password'
                   required
-                  placeholder='â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢'
+                  placeholder='••••••••'
                   className='w-full bg-surface-container-lowest border-none rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary transition-all outline-none text-foreground'
                 />
               </div>

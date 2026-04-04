@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,7 +50,7 @@ export default function ItemModal({
         onClick={() => setIsOpen(true)}
         className='flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20'
       >
-        <Plus size={18} /> AÃ±adir Plato
+        <Plus size={18} /> Añadir Plato
       </button>
 
       <AnimatePresence>
@@ -114,7 +114,7 @@ export default function ItemModal({
 
                 <div className='grid md:grid-cols-2 gap-4'>
                   <div className='space-y-2'>
-                    <label className='text-sm font-medium ml-1'>Nombre (EspaÃ±ol)</label>
+                    <label className='text-sm font-medium ml-1'>Nombre (Español)</label>
                     <input 
                       type='text' name='name' required placeholder='Ej. Hamburguesa Ember'
                       className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary transition-all outline-none text-foreground'
@@ -137,13 +137,13 @@ export default function ItemModal({
                 </div>
 
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium ml-1'>CategorÃ­a</label>
+                  <label className='text-sm font-medium ml-1'>Categoría</label>
                   <select 
                     name='categoryId' 
                     required
                     className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary transition-all outline-none text-foreground appearance-none cursor-pointer'
                   >
-                    <option value='' disabled selected>Selecciona una categorÃ­a</option>
+                    <option value='' disabled selected>Selecciona una categoría</option>
                     {categories.map((cat) => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
@@ -153,7 +153,7 @@ export default function ItemModal({
                 <div className='space-y-4 pt-2 border-t border-white/5'>
                   <p className='text-[10px] font-bold uppercase tracking-widest text-foreground/30'>Traducciones Opcionales</p>
                   <div className='space-y-2'>
-                    <label className='text-xs font-bold text-foreground/40 ml-1'>DescripciÃ³n (EspaÃ±ol)</label>
+                    <label className='text-xs font-bold text-foreground/40 ml-1'>Descripción (Español)</label>
                     <textarea 
                       name='description' 
                       rows={2}
