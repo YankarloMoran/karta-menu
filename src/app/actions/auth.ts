@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -15,7 +15,7 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
-    return redirect('/login?message=No+se+pudo+iniciar+sesión');
+    return redirect('/login?message=No+se+pudo+iniciar+sesiÃ³n');
   }
 
   // Redirect to dashboard on success

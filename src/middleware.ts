@@ -1,11 +1,11 @@
-import createMiddleware from 'next-intl/middleware';
+﻿import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // 1. Run i18n middleware first
   const response = intlMiddleware(request);
 

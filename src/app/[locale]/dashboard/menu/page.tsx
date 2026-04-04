@@ -5,7 +5,12 @@ import CategoryModal from '@/components/dashboard/CategoryModal';
 import ItemModal from '@/components/dashboard/ItemModal';
 import { deleteCategory, deleteMenuItem } from '@/app/actions/menu';
 
-export default async function MenuPage() {
+export default async function MenuPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

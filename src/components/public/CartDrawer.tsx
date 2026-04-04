@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useCart } from '@/context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -156,7 +156,7 @@ export default function CartDrawer({
                 </div>
 
                 <div className='flex items-center justify-between mb-2 px-2'>
-                  <span className='text-[10px] font-bold uppercase tracking-[0.2em] opacity-20 italic'>Kartá Order System</span>
+                  <span className='text-[10px] font-bold uppercase tracking-[0.2em] opacity-20 italic'>KartÃ¡ Order System</span>
                   <button 
                     onClick={clearCart}
                     className='text-[10px] font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 flex items-center gap-2 transition-colors'

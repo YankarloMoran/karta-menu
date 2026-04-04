@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -23,7 +23,7 @@ export async function createCategory(formData: FormData) {
 
   if (error) {
     console.error('Error creating category:', error);
-    return { error: 'No se pudo crear la categoría' };
+    return { error: 'No se pudo crear la categorÃ­a' };
   }
 
   revalidatePath('/dashboard/menu');
@@ -39,7 +39,7 @@ export async function deleteCategory(id: string) {
     .eq('id', id);
 
   if (error) {
-    return { error: 'No se pudo eliminar la categoría' };
+    return { error: 'No se pudo eliminar la categorÃ­a' };
   }
 
   revalidatePath('/dashboard/menu');

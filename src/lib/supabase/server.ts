@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+ï»¿import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export async function createClient() {
@@ -18,7 +18,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // The ‘setAll’ method was called from a Server Component.
+            // The â€˜setAllâ€™ method was called from a Server Component.
           }
         },
       },

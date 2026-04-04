@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { Utensils, Zap, BarChart3, QrCode, ArrowRight, Check } from 'lucide-react';
 
 export default function Home() {
@@ -8,12 +8,12 @@ export default function Home() {
       <nav className='fixed top-0 w-full z-50 glass border-b border-white/5'>
         <div className='max-w-7xl mx-auto px-6 h-20 flex items-center justify-between'>
           <div className='flex items-center gap-2'>
-            <span className='text-2xl font-serif font-bold text-gradient-ember tracking-tight'>Kartá</span>
+            <span className='text-2xl font-serif font-bold text-gradient-ember tracking-tight'>KartÃ¡</span>
           </div>
           <div className='hidden md:flex items-center gap-8 text-sm font-medium'>
             <Link href='#features' className='hover:text-primary transition-colors'>Funciones</Link>
             <Link href='#pricing' className='hover:text-primary transition-colors'>Precios</Link>
-            <Link href='/login' className='hover:text-primary transition-colors'>Iniciar Sesión</Link>
+            <Link href='/login' className='hover:text-primary transition-colors'>Iniciar SesiÃ³n</Link>
             <Link href='/register' className='bg-primary text-white px-5 py-2 rounded-lg font-bold hover:bg-opacity-80 transition-all'>
               Empezar Gratis
             </Link>
@@ -26,11 +26,11 @@ export default function Home() {
         <div className='absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10' />
         <div className='max-w-4xl mx-auto text-center'>
           <h1 className='text-5xl md:text-7xl font-serif font-bold mb-8 leading-tight'>
-            El Menú del Mañana, <br />
+            El MenÃº del MaÃ±ana, <br />
             <span className='text-gradient-ember'>Hoy.</span>
           </h1>
           <p className='text-xl md:text-2xl text-foreground/70 mb-12 max-w-2xl mx-auto font-sans leading-relaxed'>
-            Transforma la experiencia de tu restaurante con un menú digital premium. 
+            Transforma la experiencia de tu restaurante con un menÃº digital premium. 
             Sin aplicaciones, solo escanea y disfruta.
           </p>
           <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
@@ -49,24 +49,24 @@ export default function Home() {
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl md:text-4xl font-serif font-bold mb-4'>Autoridad Digital</h2>
-            <p className='text-foreground/60'>Todo lo que necesitas para gestionar tu menú con elegancia.</p>
+            <p className='text-foreground/60'>Todo lo que necesitas para gestionar tu menÃº con elegancia.</p>
           </div>
 
           <div className='grid md:grid-cols-3 gap-8'>
             <FeatureCard 
               icon={<Zap className='text-primary' />}
               title='Actualizaciones en Vivo'
-              description='Cambia precios o platos agotados instantáneamente desde tu dashboard.'
+              description='Cambia precios o platos agotados instantÃ¡neamente desde tu dashboard.'
             />
             <FeatureCard 
               icon={<BarChart3 className='text-primary' />}
-              title='Analíticas de Escaneo'
-              description='Conoce qué platos son los favoritos y cuándo recibes más clientes.'
+              title='AnalÃ­ticas de Escaneo'
+              description='Conoce quÃ© platos son los favoritos y cuÃ¡ndo recibes mÃ¡s clientes.'
             />
             <FeatureCard 
               icon={<Utensils className='text-primary' />}
               title='Experiencia Visual'
-              description='Fotos de alta resolución y diseño adaptable a cualquier smartphone.'
+              description='Fotos de alta resoluciÃ³n y diseÃ±o adaptable a cualquier smartphone.'
             />
           </div>
         </div>
@@ -80,18 +80,18 @@ export default function Home() {
             <PriceCard 
               name='Esencial'
               price='0'
-              features={['1 Menú Digital', 'Hasta 15 platos', 'QR Estándar', 'Soporte vía Email']}
+              features={['1 MenÃº Digital', 'Hasta 15 platos', 'QR EstÃ¡ndar', 'Soporte vÃ­a Email']}
             />
             <PriceCard 
               name='Premium'
               price='12'
               highlighted
-              features={['Menús Ilimitados', 'Platos Ilimitados', 'Analíticas Básicas', 'Categorías Personalizadas']}
+              features={['MenÃºs Ilimitados', 'Platos Ilimitados', 'AnalÃ­ticas BÃ¡sicas', 'CategorÃ­as Personalizadas']}
             />
             <PriceCard 
               name='Elite'
               price='29'
-              features={['Analíticas Pro', 'Branding Personalizado', 'Multi-sucursal', 'Soporte Prioritario']}
+              features={['AnalÃ­ticas Pro', 'Branding Personalizado', 'Multi-sucursal', 'Soporte Prioritario']}
             />
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className='py-12 border-t border-white/5 text-center'>
-        <p className='text-sm text-foreground/40'>© 2026 Kartá. El estándar de oro para menús digitales.</p>
+        <p className='text-sm text-foreground/40'>Â© 2026 KartÃ¡. El estÃ¡ndar de oro para menÃºs digitales.</p>
       </footer>
     </div>
   );

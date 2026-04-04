@@ -11,7 +11,12 @@ import {
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
 import { startOfDay, subDays, format } from 'date-fns';
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -70,7 +75,7 @@ export default async function DashboardPage() {
     <div className='space-y-10'>
       <header className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
         <div>
-          <h1 className='text-4XL font-serif font-bold text-gradient-ember mb-2'>Bienvenido a Kartá</h1>
+          <h1 className='text-4xl font-serif font-bold text-gradient-ember mb-2'>Bienvenido a Kartá</h1>
           <p className='text-foreground/60'>Tus analíticas y gestión en un solo lugar.</p>
         </div>
       </header>

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { Noto_Serif, Manrope } from 'next/font/google';
 import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
@@ -10,7 +10,7 @@ const notoSerif = Noto_Serif({ subsets: ['latin'], variable: '--font-serif' });
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Kartá — QR Menu SaaS',
+  title: 'KartÃ¡ â€” QR Menu SaaS',
   description: 'The luxury digital dining experience.',
 };
 

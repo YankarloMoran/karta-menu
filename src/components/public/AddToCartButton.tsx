@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useCart, CartItem } from '@/context/CartContext';
 import { Plus, Minus, ShoppingBag } from 'lucide-react';

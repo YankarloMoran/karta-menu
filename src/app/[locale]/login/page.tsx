@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { ArrowLeft, Mail, Lock } from 'lucide-react';
 import { login } from '@/app/actions/auth';
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { message: string };
+  searchParams: Promise<{ message: string }>;
 }) {
+  const { message } = await searchParams;
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-background px-6 py-12'>
       <div className='absolute top-0 left-0 p-8'>
@@ -23,9 +24,9 @@ export default function LoginPage({
 
         <div className='glass p-8 rounded-3xl'>
           <form action={login} className='space-y-6'>
-            {searchParams?.message && (
+            {message && (
               <p className='text-center text-sm font-medium text-red-500 bg-red-500/10 py-3 rounded-lg'>
-                {searchParams.message}
+                {message}
               </p>
             )}
 
@@ -51,7 +52,7 @@ export default function LoginPage({
                   type='password'
                   name='password'
                   required
-                  placeholder='••••••••'
+                  placeholder='â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢'
                   className='w-full bg-surface-container-lowest border-none rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary transition-all outline-none text-foreground'
                 />
               </div>

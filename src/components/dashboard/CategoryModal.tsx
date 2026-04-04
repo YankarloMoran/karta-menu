@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,7 +34,7 @@ export default function CategoryModal({
         onClick={() => setIsOpen(true)}
         className='flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold hover:bg-primary/20 transition-all border border-primary/20'
       >
-        <Plus size={18} /> Añadir Categoría
+        <Plus size={18} /> AÃ±adir CategorÃ­a
       </button>
 
       <AnimatePresence>
@@ -63,14 +63,14 @@ export default function CategoryModal({
                 <X size={20} />
               </button>
 
-              <h2 className='text-2xl font-serif font-bold mb-2'>Nueva Categoría</h2>
+              <h2 className='text-2xl font-serif font-bold mb-2'>Nueva CategorÃ­a</h2>
               <p className='text-sm text-foreground/60 mb-8'>Agrupa tus platos (Ej. Bebidas, Postres).</p>
 
               <form action={handleSubmit} className='space-y-6'>
                 <input type='hidden' name='restaurantId' value={restaurantId} />
                 
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium ml-1'>Nombre de la Categoría</label>
+                  <label className='text-sm font-medium ml-1'>Nombre de la CategorÃ­a</label>
                   <input 
                     type='text'
                     name='name'
@@ -94,7 +94,7 @@ export default function CategoryModal({
                     disabled={isPending}
                     className='flex-1 bg-gradient-ember text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:scale-100'
                   >
-                    {isPending ? <Loader2 className='animate-spin' size={20} /> : 'Crear Categoría'}
+                    {isPending ? <Loader2 className='animate-spin' size={20} /> : 'Crear CategorÃ­a'}
                   </button>
                 </div>
               </form>

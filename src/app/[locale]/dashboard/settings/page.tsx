@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -53,7 +53,7 @@ export default function SettingsPage() {
     setIsPending(false);
 
     if (result.success) {
-      alert('¡Perfil actualizado con éxito!');
+      alert('Â¡Perfil actualizado con Ã©xito!');
     } else {
       alert(result.error);
     }
@@ -65,7 +65,7 @@ export default function SettingsPage() {
     <div className='max-w-4xl mx-auto space-y-10'>
       <div>
         <h1 className='text-4xl font-serif font-bold mb-2 text-gradient-ember'>Perfil del Restaurante</h1>
-        <p className='text-foreground/60'>Define el alma y la identidad de tu negocio en Kartá.</p>
+        <p className='text-foreground/60'>Define el alma y la identidad de tu negocio en KartÃ¡.</p>
       </div>
 
       <form action={handleSubmit} className='grid grid-cols-1 lg:grid-cols-3 gap-10'>
@@ -107,7 +107,7 @@ export default function SettingsPage() {
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               <div className='space-y-2'>
-                <label className='text-sm font-bold uppercase tracking-widest text-foreground/40 px-1 flex items-center gap-2'><MapPin size={14} /> Dirección</label>
+                <label className='text-sm font-bold uppercase tracking-widest text-foreground/40 px-1 flex items-center gap-2'><MapPin size={14} /> DirecciÃ³n</label>
                 <input 
                   type='text' name='address' defaultValue={restaurant.address || ''} 
                   placeholder='Calle Falsa 123, Ciudad'
@@ -115,7 +115,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div className='space-y-2'>
-                <label className='text-sm font-bold uppercase tracking-widest text-foreground/40 px-1 flex items-center gap-2'><Phone size={14} /> Teléfono</label>
+                <label className='text-sm font-bold uppercase tracking-widest text-foreground/40 px-1 flex items-center gap-2'><Phone size={14} /> TelÃ©fono</label>
                 <input 
                   type='text' name='phone' defaultValue={restaurant.phone || ''} 
                   placeholder='+52 123 456 7890'
