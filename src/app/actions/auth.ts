@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
 export async function login(formData: FormData) {
@@ -42,31 +42,37 @@ export async function register(formData: FormData) {
   });
 
   if (authError || !data.user) {
+    console.error('Error in signUp:', authError); // Añadimos este log
     return redirect('/register?message=Error+al+crear+cuenta');
   }
+
+  // Create an admin client to bypass RLS for system operations
+  const adminClient = createAdminClient();
 
   // Create restaurant profile
   const slug = restaurantName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
   
   // Note: Handle new user trigger is already in DB, but we explicitly create the restaurant side
-  const { data: restaurant, error: restError } = await supabase
+  const { data: restaurant, error: restError } = await adminClient
     .from('restaurants')
     .insert({
       name: restaurantName,
       owner_name: restaurantName, // Could be changed later
       slug: slug + '-' + Math.floor(Math.random() * 1000), // Ensure uniqueness
       email: email,
+      user_id: data.user.id, // Trying to satisfy RLS
     })
     .select()
     .single();
 
   if (restError || !restaurant) {
+    console.error('Error creating restaurant with admin client:', restError);
     // If restaurant creation failed, we should handle it gracefully
     return redirect('/register?message=Error+al+crear+el+restaurante');
   }
 
   // Link restaurant to profile
-  await supabase
+  await adminClient
     .from('profiles')
     .update({ restaurant_id: restaurant.id })
     .match({ user_id: data.user.id });
