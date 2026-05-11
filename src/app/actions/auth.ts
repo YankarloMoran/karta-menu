@@ -60,7 +60,6 @@ export async function register(formData: FormData) {
       owner_name: restaurantName, // Could be changed later
       slug: slug + '-' + Math.floor(Math.random() * 1000), // Ensure uniqueness
       email: email,
-      user_id: data.user.id, // Trying to satisfy RLS
     })
     .select()
     .single();

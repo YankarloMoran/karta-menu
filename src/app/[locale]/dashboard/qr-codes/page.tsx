@@ -1,9 +1,11 @@
-﻿import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import QRClient from '@/components/dashboard/QRClient';
+import { getTranslations } from 'next-intl/server';
 
 export default async function QRCodesPage() {
   const supabase = await createClient();
+  const t = await getTranslations('Dashboard');
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect('/login');
@@ -22,9 +24,9 @@ export default async function QRCodesPage() {
 
   if (!restaurant) {
     return (
-      <div className='glass p-20 rounded-[40px] text-center'>
-        <h2 className='text-2xl font-serif font-bold mb-3'>Restaurante no encontrado</h2>
-        <p className='text-foreground/60'>Crea tu restaurante primero en la configuraciÃ³n.</p>
+      <div className='glass p-20 rounded-[40px] text-center animate-fade-in'>
+        <h2 className='text-2xl font-serif font-bold mb-3'>{t('qr_not_found')}</h2>
+        <p className='text-foreground/50'>{t('qr_not_found_desc')}</p>
       </div>
     );
   }
