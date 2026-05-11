@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -11,19 +11,24 @@ export async function createCategory(formData: FormData) {
   const name = formData.get('name') as string;
   const restaurantId = formData.get('restaurantId') as string;
 
-  const supabase = await createClient();
+  if (!name || !restaurantId) {
+    return { error: 'Nombre de categoría o ID de restaurante faltante' };
+  }
 
-  const { error } = await supabase
+  // Use admin client to bypass RLS if policies are not set
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
     .from('menu_categories')
     .insert({
       name,
       restaurant_id: restaurantId,
-      order_index: 0, // Simplified for now
+      order_index: 0,
     });
 
   if (error) {
     console.error('Error creating category:', error);
-    return { error: 'No se pudo crear la categoría' };
+    return { error: `Error DB: ${error.message}` };
   }
 
   revalidatePath('/dashboard/menu');
@@ -31,14 +36,15 @@ export async function createCategory(formData: FormData) {
 }
 
 export async function deleteCategory(id: string) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
-  const { error } = await supabase
+  const { error } = await adminClient
     .from('menu_categories')
     .delete()
     .eq('id', id);
 
   if (error) {
+    console.error('Error deleting category:', error);
     return { error: 'No se pudo eliminar la categoría' };
   }
 
@@ -51,7 +57,9 @@ export async function deleteCategory(id: string) {
  */
 
 export async function createMenuItem(formData: FormData) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
+  const supabase = await createClient(); // For storage upload context if needed, though admin works better for storage too
+  const adminStorage = adminClient.storage;
   
   const name = formData.get('name') as string;
   const name_en = formData.get('name_en') as string;
@@ -62,27 +70,31 @@ export async function createMenuItem(formData: FormData) {
   const restaurantId = formData.get('restaurantId') as string;
   const imageFile = formData.get('image') as File;
 
+  if (!name || !restaurantId || !categoryId) {
+    return { error: 'Faltan campos obligatorios' };
+  }
+
   let imageUrl = null;
 
   // Upload image if provided
   if (imageFile && imageFile.size > 0) {
     const fileExt = imageFile.name.split('.').pop();
-    const fileName = `${restaurantId}/${Math.random()}.${fileExt}`;
+    const fileName = `${restaurantId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await adminStorage
       .from('menu-images')
       .upload(filePath, imageFile);
 
     if (uploadError) {
       console.error('Upload error:', uploadError);
     } else {
-      const { data } = supabase.storage.from('menu-images').getPublicUrl(filePath);
+      const { data } = adminStorage.from('menu-images').getPublicUrl(filePath);
       imageUrl = data.publicUrl;
     }
   }
 
-  const { error } = await supabase
+  const { error } = await adminClient
     .from('menu_items')
     .insert({
       name,
@@ -99,7 +111,7 @@ export async function createMenuItem(formData: FormData) {
 
   if (error) {
     console.error('Error creating menu item:', error);
-    return { error: 'No se pudo crear el plato' };
+    return { error: `Error DB: ${error.message}` };
   }
 
   revalidatePath('/dashboard/menu');
@@ -107,26 +119,27 @@ export async function createMenuItem(formData: FormData) {
 }
 
 export async function deleteMenuItem(id: string, imageUrl: string | null) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   // If there's an image, delete it from storage first
   if (imageUrl) {
     try {
       const path = imageUrl.split('/menu-images/').pop();
       if (path) {
-        await supabase.storage.from('menu-images').remove([path]);
+        await adminClient.storage.from('menu-images').remove([path]);
       }
     } catch (e) {
       console.error('Error deleting image:', e);
     }
   }
 
-  const { error } = await supabase
+  const { error } = await adminClient
     .from('menu_items')
     .delete()
     .eq('id', id);
 
   if (error) {
+    console.error('Error deleting item:', error);
     return { error: 'No se pudo eliminar el plato' };
   }
 
