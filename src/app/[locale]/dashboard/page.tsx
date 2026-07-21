@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { ensureUserRestaurant } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 import {
   Users,
   Menu as MenuIcon,
@@ -163,9 +164,9 @@ export default async function DashboardPage({
               <h3 className='text-xl font-serif font-bold flex items-center gap-2'>
                 <Star size={20} className='text-amber-400 fill-current' /> Platos Destacados del Menú
               </h3>
-              <a href='/dashboard/menu' className='text-xs font-bold text-primary hover:underline flex items-center gap-1'>
+              <Link href='/dashboard/menu' className='text-xs font-bold text-primary hover:underline flex items-center gap-1'>
                 Ver menú completo <ArrowUpRight size={14} />
-              </a>
+              </Link>
             </div>
 
             {popularItems && popularItems.length > 0 ? (

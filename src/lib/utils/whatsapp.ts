@@ -12,7 +12,7 @@ export function getWhatsAppUrl({
   restaurantName,
   restaurantPhone,
   tableNumber,
-  template,
+  template: _template,
   currency = 'Q',
   orderType = 'table',
   address = '',

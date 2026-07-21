@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, AlertCircle, Search, Star, Leaf, Flame, WheatOff, MapPin, Phone, X, Heart, Clock, Sparkles } from 'lucide-react';
+import { ShoppingBag, AlertCircle, Search, Star, Leaf, Flame, WheatOff, X, Heart } from 'lucide-react';
 import { CartProvider, useCart } from '@/context/CartContext';
 import CartDrawer from './CartDrawer';
 import AddToCartButton from './AddToCartButton';
