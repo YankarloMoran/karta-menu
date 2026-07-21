@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { ensureUserRestaurant } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
 import {
   Users,
@@ -9,7 +10,6 @@ import {
   Star,
   QrCode,
   ExternalLink,
-  MessageCircle,
   ArrowUpRight,
 } from 'lucide-react';
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
@@ -42,20 +42,20 @@ export default async function DashboardPage({
 
   if (!user) redirect('/login');
 
-  // Fetch restaurant profile
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('restaurant_id')
-    .eq('user_id', user.id)
-    .single();
+  const restaurantId = await ensureUserRestaurant(user);
 
-  const restaurantId = profile?.restaurant_id;
+  const { data: restaurant } = await supabase
+    .from('restaurants')
+    .select('name, slug')
+    .eq('id', restaurantId)
+    .single();
 
   // Fetch metrics
   const { count: categoryCount } = await supabase
     .from('menu_categories')
     .select('*', { count: 'exact', head: true })
     .eq('restaurant_id', restaurantId);
+
 
   const { count: itemCount } = await supabase
     .from('menu_items')
@@ -169,7 +169,7 @@ export default async function DashboardPage({
               <QuickActionButton
                 icon={<ExternalLink size={18} />}
                 label={t('view_public_menu')}
-                href='/dashboard/settings'
+                href={restaurant?.slug ? `/${locale}/m/${restaurant.slug}` : '/dashboard/settings'}
               />
             </div>
           </div>

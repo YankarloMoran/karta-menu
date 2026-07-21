@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
 
   if (!user && isDashboard) {
     const locale = pathname.split('/')[1] || routing.defaultLocale;
-    const validLocale = routing.locales.includes(locale as any) ? locale : routing.defaultLocale;
+    const validLocale = routing.locales.includes(locale as (typeof routing.locales)[number]) ? locale : routing.defaultLocale;
     return NextResponse.redirect(new URL(`/${validLocale}/login`, request.url));
   }
 

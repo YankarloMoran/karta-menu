@@ -5,13 +5,15 @@ import { X, Minus, Plus, ShoppingBag, Trash2, MessageCircle } from 'lucide-react
 import { useCart } from '@/context/CartContext';
 import { useTranslations } from 'next-intl';
 import { getWhatsAppUrl } from '@/lib/utils/whatsapp';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   restaurantName: string;
   restaurantPhone: string;
+  currency?: string;
+  initialTable?: string;
 }
 
 export default function CartDrawer({
@@ -19,11 +21,19 @@ export default function CartDrawer({
   onClose,
   restaurantName,
   restaurantPhone,
+  currency = 'Q',
+  initialTable = '',
 }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, clearCart, totalPrice, totalItems } = useCart();
   const t = useTranslations('Menu');
-  const [tableNumber, setTableNumber] = useState('');
+  const [tableNumber, setTableNumber] = useState(initialTable);
   const [isConfirmed, setIsConfirmed] = useState(false);
+
+  useEffect(() => {
+    if (initialTable) {
+      setTableNumber(initialTable);
+    }
+  }, [initialTable]);
 
   const handleOrder = () => {
     const url = getWhatsAppUrl({
@@ -67,7 +77,7 @@ export default function CartDrawer({
                   <span className='text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-lg font-bold'>{totalItems}</span>
                 )}
               </h2>
-              <button onClick={onClose} className='p-2 text-foreground/40 hover:text-foreground/80 transition-colors'>
+              <button onClick={onClose} className='p-2 text-foreground/40 hover:text-foreground/80 transition-colors cursor-pointer'>
                 <X size={24} />
               </button>
             </div>
@@ -87,9 +97,9 @@ export default function CartDrawer({
                 <p className='text-foreground/50 text-sm'>{t('orderedDesc')}</p>
                 <button
                   onClick={() => { setIsConfirmed(false); onClose(); }}
-                  className='mt-8 px-6 py-3 rounded-xl bg-white/5 text-foreground/60 font-bold hover:bg-white/10 transition-colors'
+                  className='mt-8 px-6 py-3 rounded-xl bg-white/5 text-foreground/60 font-bold hover:bg-white/10 transition-colors cursor-pointer'
                 >
-                  {t('viewOrder') === 'Tu Pedido' ? 'Cerrar' : 'Close'}
+                  Cerrar
                 </button>
               </div>
             ) : items.length === 0 ? (
@@ -118,21 +128,21 @@ export default function CartDrawer({
                         <div className='flex-1 min-w-0'>
                           <h4 className='font-bold text-sm leading-snug truncate'>{item.name}</h4>
                           <p className='text-primary font-serif font-bold text-sm mt-0.5'>
-                            Q{(item.price * item.quantity).toFixed(2)}
+                            {currency}{(item.price * item.quantity).toFixed(2)}
                           </p>
                         </div>
 
                         <div className='flex items-center gap-1'>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors'
+                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
                           >
                             <Minus size={14} />
                           </button>
                           <span className='w-8 text-center font-bold text-sm'>{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors'
+                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
                           >
                             <Plus size={14} />
                           </button>
@@ -140,7 +150,7 @@ export default function CartDrawer({
 
                         <button
                           onClick={() => removeItem(item.id)}
-                          className='p-2 text-foreground/20 hover:text-red-400 transition-colors'
+                          className='p-2 text-foreground/20 hover:text-red-400 transition-colors cursor-pointer'
                         >
                           <Trash2 size={14} />
                         </button>
@@ -161,7 +171,7 @@ export default function CartDrawer({
                     />
                     <button
                       onClick={clearCart}
-                      className='text-xs font-bold text-red-400 hover:text-red-300 transition-colors'
+                      className='text-xs font-bold text-red-400 hover:text-red-300 transition-colors cursor-pointer'
                     >
                       {t('clear')}
                     </button>
@@ -169,12 +179,12 @@ export default function CartDrawer({
 
                   <div className='flex justify-between items-center'>
                     <span className='text-sm text-foreground/50'>{t('total')}</span>
-                    <span className='text-2xl font-serif font-bold text-primary'>Q{totalPrice.toFixed(2)}</span>
+                    <span className='text-2xl font-serif font-bold text-primary'>{currency}{totalPrice.toFixed(2)}</span>
                   </div>
 
                   <button
                     onClick={handleOrder}
-                    className='w-full bg-gradient-ember text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-[0.98] shadow-lg shadow-primary/20'
+                    className='w-full bg-gradient-ember text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 cursor-pointer'
                   >
                     <MessageCircle size={20} /> {t('confirmOrder')}
                   </button>
@@ -187,3 +197,4 @@ export default function CartDrawer({
     </AnimatePresence>
   );
 }
+

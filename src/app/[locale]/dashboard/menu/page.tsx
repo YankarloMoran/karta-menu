@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { ensureUserRestaurant } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
 import { Image as ImageIcon } from 'lucide-react';
 import CategoryModal from '@/components/dashboard/CategoryModal';
@@ -7,25 +8,14 @@ import MenuItemCard from '@/components/dashboard/MenuItemCard';
 import DeleteCategoryButton from '@/components/dashboard/DeleteCategoryButton';
 import { getTranslations } from 'next-intl/server';
 
-export default async function MenuPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function MenuPage() {
   const t = await getTranslations('Dashboard');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('restaurant_id')
-    .eq('user_id', user.id)
-    .single();
-
-  const restaurantId = profile?.restaurant_id;
+  const restaurantId = await ensureUserRestaurant(user);
 
   const { data: categories } = await supabase
     .from('menu_categories')
@@ -72,8 +62,8 @@ export default async function MenuPage({
               </div>
 
               <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-                {category.menu_items?.map((item: any) => (
-                  <MenuItemCard key={item.id} item={item} />
+                {category.menu_items?.map((item: { id: string; name: string; description: string | null; price: number; image_url: string | null; is_available: boolean; is_vegetarian?: boolean; is_spicy?: boolean; is_recommended?: boolean; is_gluten_free?: boolean; category_id?: string }) => (
+                  <MenuItemCard key={item.id} item={{ ...item, restaurant_id: restaurantId }} categories={categories || []} />
                 ))}
               </div>
             </div>
@@ -83,3 +73,4 @@ export default async function MenuPage({
     </div>
   );
 }
+

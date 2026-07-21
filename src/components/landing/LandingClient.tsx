@@ -1,12 +1,11 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import { Utensils, Zap, BarChart3, QrCode, ArrowRight, Check, Sparkles, Users, ScanLine, ShoppingBag, Menu, X, Languages } from 'lucide-react';
+import { Utensils, Zap, BarChart3, QrCode, ArrowRight, Check, Sparkles, Users, ShoppingBag, Menu, X, Languages } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import ThemeToggle from '@/components/ui/ThemeToggle';
-import { usePathname } from '@/i18n/routing';
 
 function AnimatedSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);

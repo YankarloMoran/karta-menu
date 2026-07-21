@@ -10,7 +10,13 @@ interface ChartDataPoint {
   views: number;
 }
 
-function CustomTooltip({ active, payload, label }: any) {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ value: number }>;
+  label?: string;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     return (
       <div className='glass p-4 rounded-xl border border-white/10 shadow-2xl'>

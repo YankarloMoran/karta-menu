@@ -26,7 +26,7 @@ export function getWhatsAppUrl({
     .join('\n');
 
   // 2. Replace variables in template
-  let message = template
+  const message = template
     .replace('{restaurant}', restaurantName)
     .replace('{items}', itemsText)
     .replace('{total}', `Q${total.toFixed(2)}`)
