@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, ShoppingBag, Trash2, MessageCircle } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, Trash2, MessageCircle, Utensils, MapPin, Bike, FileText } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useTranslations } from 'next-intl';
 import { getWhatsAppUrl } from '@/lib/utils/whatsapp';
@@ -27,11 +27,15 @@ export default function CartDrawer({
   const { items, removeItem, updateQuantity, clearCart, totalPrice, totalItems } = useCart();
   const t = useTranslations('Menu');
   const [tableNumber, setTableNumber] = useState(initialTable);
+  const [orderType, setOrderType] = useState<'table' | 'takeout' | 'delivery'>('table');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [specialNotes, setSpecialNotes] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     if (initialTable) {
       setTableNumber(initialTable);
+      setOrderType('table');
     }
   }, [initialTable]);
 
@@ -43,6 +47,10 @@ export default function CartDrawer({
       restaurantPhone,
       tableNumber,
       template: t('whatsappTemplate'),
+      currency,
+      orderType,
+      address: deliveryAddress,
+      specialNotes
     });
     window.open(url, '_blank');
     setIsConfirmed(true);
@@ -74,7 +82,7 @@ export default function CartDrawer({
                 <ShoppingBag size={20} className='text-primary' />
                 {t('viewOrder')}
                 {totalItems > 0 && (
-                  <span className='text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-lg font-bold'>{totalItems}</span>
+                  <span className='text-xs bg-primary/20 text-primary px-2.5 py-0.5 rounded-full font-bold'>{totalItems}</span>
                 )}
               </h2>
               <button onClick={onClose} className='p-2 text-foreground/40 hover:text-foreground/80 transition-colors cursor-pointer'>
@@ -120,7 +128,7 @@ export default function CartDrawer({
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0, padding: 0 }}
-                        className='flex gap-4 p-4 bg-white/5 rounded-2xl items-center'
+                        className='flex gap-4 p-4 bg-white/5 rounded-2xl items-center border border-white/5'
                       >
                         {item.image_url && (
                           <img src={item.image_url} className='w-14 h-14 rounded-xl object-cover flex-shrink-0' alt={item.name} />
@@ -132,25 +140,25 @@ export default function CartDrawer({
                           </p>
                         </div>
 
-                        <div className='flex items-center gap-1'>
+                        <div className='flex items-center gap-1 bg-surface-container-lowest p-1 rounded-xl border border-white/5'>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
+                            className='w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
                           >
-                            <Minus size={14} />
+                            <Minus size={12} />
                           </button>
-                          <span className='w-8 text-center font-bold text-sm'>{item.quantity}</span>
+                          <span className='w-7 text-center font-bold text-xs'>{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
+                            className='w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
                           >
-                            <Plus size={14} />
+                            <Plus size={12} />
                           </button>
                         </div>
 
                         <button
                           onClick={() => removeItem(item.id)}
-                          className='p-2 text-foreground/20 hover:text-red-400 transition-colors cursor-pointer'
+                          className='p-1.5 text-foreground/20 hover:text-red-400 transition-colors cursor-pointer'
                         >
                           <Trash2 size={14} />
                         </button>
@@ -159,34 +167,95 @@ export default function CartDrawer({
                   </AnimatePresence>
                 </div>
 
-                {/* Footer */}
-                <div className='p-6 border-t border-white/5 space-y-4'>
-                  <div className='flex items-center gap-3'>
-                    <input
-                      type='text'
-                      value={tableNumber}
-                      onChange={(e) => setTableNumber(e.target.value)}
-                      placeholder={t('tablePlaceholder')}
-                      className='flex-1 bg-surface-container-lowest border border-white/5 rounded-xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
-                    />
-                    <button
-                      onClick={clearCart}
-                      className='text-xs font-bold text-red-400 hover:text-red-300 transition-colors cursor-pointer'
-                    >
-                      {t('clear')}
-                    </button>
+                {/* Footer Form & Controls */}
+                <div className='p-6 border-t border-white/5 space-y-4 max-h-[50vh] overflow-y-auto'>
+                  {/* Order Type Selector */}
+                  <div className='space-y-2'>
+                    <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40'>Tipo de Pedido</label>
+                    <div className='grid grid-cols-3 gap-2'>
+                      <button
+                        type='button'
+                        onClick={() => setOrderType('table')}
+                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
+                          orderType === 'table' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
+                        }`}
+                      >
+                        <Utensils size={14} /> En Mesa
+                      </button>
+                      <button
+                        type='button'
+                        onClick={() => setOrderType('takeout')}
+                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
+                          orderType === 'takeout' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
+                        }`}
+                      >
+                        <ShoppingBag size={14} /> Llevar
+                      </button>
+                      <button
+                        type='button'
+                        onClick={() => setOrderType('delivery')}
+                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
+                          orderType === 'delivery' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
+                        }`}
+                      >
+                        <Bike size={14} /> Domicilio
+                      </button>
+                    </div>
                   </div>
 
-                  <div className='flex justify-between items-center'>
+                  {/* Contextual Input */}
+                  {orderType === 'table' && (
+                    <div className='space-y-1.5'>
+                      <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40'>Número de Mesa</label>
+                      <input
+                        type='text'
+                        value={tableNumber}
+                        onChange={(e) => setTableNumber(e.target.value)}
+                        placeholder='Ej. Mesa 4, Terraza 2'
+                        className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
+                      />
+                    </div>
+                  )}
+
+                  {orderType === 'delivery' && (
+                    <div className='space-y-1.5'>
+                      <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40 flex items-center gap-1'>
+                        <MapPin size={12} /> Dirección de Entrega
+                      </label>
+                      <input
+                        type='text'
+                        value={deliveryAddress}
+                        onChange={(e) => setDeliveryAddress(e.target.value)}
+                        placeholder='Ej. Calle 5, Casa #12, Zona 10'
+                        className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
+                      />
+                    </div>
+                  )}
+
+                  {/* Notes for Kitchen */}
+                  <div className='space-y-1.5'>
+                    <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40 flex items-center gap-1'>
+                      <FileText size={12} /> Instrucciones Especiales (Opcional)
+                    </label>
+                    <input
+                      type='text'
+                      value={specialNotes}
+                      onChange={(e) => setSpecialNotes(e.target.value)}
+                      placeholder='Ej. Sin cebolla, aderezo aparte...'
+                      className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
+                    />
+                  </div>
+
+                  <div className='flex justify-between items-center pt-2 border-t border-white/5'>
                     <span className='text-sm text-foreground/50'>{t('total')}</span>
                     <span className='text-2xl font-serif font-bold text-primary'>{currency}{totalPrice.toFixed(2)}</span>
                   </div>
 
                   <button
                     onClick={handleOrder}
-                    className='w-full bg-gradient-ember text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 cursor-pointer'
+                    className='w-full bg-gradient-ember text-white py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 cursor-pointer'
                   >
-                    <MessageCircle size={20} /> {t('confirmOrder')}
+                    <MessageCircle size={20} /> Pedir por WhatsApp
                   </button>
                 </div>
               </>

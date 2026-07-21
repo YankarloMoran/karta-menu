@@ -3,6 +3,7 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
+  notes?: string;
 }
 
 export function getWhatsAppUrl({
@@ -11,7 +12,11 @@ export function getWhatsAppUrl({
   restaurantName,
   restaurantPhone,
   tableNumber,
-  template
+  template,
+  currency = 'Q',
+  orderType = 'table',
+  address = '',
+  specialNotes = ''
 }: {
   items: CartItem[];
   total: number;
@@ -19,22 +24,40 @@ export function getWhatsAppUrl({
   restaurantPhone: string;
   tableNumber: string;
   template: string;
+  currency?: string;
+  orderType?: 'table' | 'takeout' | 'delivery';
+  address?: string;
+  specialNotes?: string;
 }) {
   // 1. Format the items list
   const itemsText = items
-    .map(item => `*${item.quantity}x* ${item.name} (Q${(item.price * item.quantity).toFixed(2)})`)
+    .map(item => {
+      const noteTxt = item.notes ? ` _(${item.notes})_` : '';
+      return `• *${item.quantity}x* ${item.name}${noteTxt} - ${currency}${(item.price * item.quantity).toFixed(2)}`;
+    })
     .join('\n');
 
-  // 2. Replace variables in template
-  const message = template
-    .replace('{restaurant}', restaurantName)
-    .replace('{items}', itemsText)
-    .replace('{total}', `Q${total.toFixed(2)}`)
-    .replace('{table}', tableNumber || 'N/A');
+  // 2. Order type label
+  let orderTypeLabel = '🪑 En Mesa';
+  if (orderType === 'takeout') orderTypeLabel = '🛍️ Para Llevar';
+  if (orderType === 'delivery') orderTypeLabel = `🛵 Domicilio: ${address || 'Dirección no especificada'}`;
+  if (orderType === 'table' && tableNumber) orderTypeLabel = `🪑 Mesa #${tableNumber}`;
 
-  // 3. Clean and encode phone
+  // 3. Build formatted message
+  let message = `🍽️ *NUEVO PEDIDO - ${restaurantName}*\n\n`;
+  message += `📌 *Tipo de Pedido:* ${orderTypeLabel}\n\n`;
+  message += `🛒 *Detalle del Pedido:*\n${itemsText}\n\n`;
+  message += `💰 *TOTAL:* *${currency}${total.toFixed(2)}*\n`;
+
+  if (specialNotes.trim()) {
+    message += `\n📝 *Notas para la cocina:* ${specialNotes.trim()}\n`;
+  }
+
+  message += `\n_Enviado desde el Menú Digital Kartá_`;
+
+  // 4. Clean and encode phone
   const cleanPhone = restaurantPhone.replace(/\D/g, '');
-  
-  // 4. Generate URL
+
+  // 5. Generate URL
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 }

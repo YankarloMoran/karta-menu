@@ -106,6 +106,13 @@ export default async function DashboardPage({
   const hour = new Date().getHours();
   const greetingKey = hour < 12 ? 'greeting_morning' : hour < 18 ? 'greeting_afternoon' : 'greeting_evening';
 
+  // Fetch top dishes for restaurant
+  const { data: popularItems } = await supabase
+    .from('menu_items')
+    .select('id, name, price, image_url, is_recommended, is_vegetarian, is_spicy')
+    .eq('restaurant_id', restaurantId)
+    .limit(4);
+
   return (
     <div className='space-y-10 stagger-children'>
       <header className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
@@ -147,8 +154,42 @@ export default async function DashboardPage({
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
         {/* Main Chart Area */}
-        <div className='lg:col-span-2'>
+        <div className='lg:col-span-2 space-y-8'>
           <AnalyticsCharts data={chartData} />
+
+          {/* Popular Dishes Highlight */}
+          <div className='glass p-8 rounded-[32px] border border-white/5 space-y-6'>
+            <div className='flex items-center justify-between'>
+              <h3 className='text-xl font-serif font-bold flex items-center gap-2'>
+                <Star size={20} className='text-amber-400 fill-current' /> Platos Destacados del Menú
+              </h3>
+              <a href='/dashboard/menu' className='text-xs font-bold text-primary hover:underline flex items-center gap-1'>
+                Ver menú completo <ArrowUpRight size={14} />
+              </a>
+            </div>
+
+            {popularItems && popularItems.length > 0 ? (
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                {popularItems.map((item) => (
+                  <div key={item.id} className='flex items-center gap-3 p-3 bg-white/5 rounded-2xl border border-white/5'>
+                    {item.image_url ? (
+                      <img src={item.image_url} alt={item.name} className='w-12 h-12 rounded-xl object-cover' />
+                    ) : (
+                      <div className='w-12 h-12 rounded-xl bg-surface-container-lowest flex items-center justify-center text-xs text-foreground/30 font-bold'>
+                        Kartá
+                      </div>
+                    )}
+                    <div className='flex-1 min-w-0'>
+                      <h4 className='font-bold text-sm truncate'>{item.name}</h4>
+                      <p className='text-xs font-serif font-bold text-primary'>Q{item.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className='text-xs text-foreground/40 italic'>Aún no has agregado platos a tu menú.</p>
+            )}
+          </div>
         </div>
 
         {/* Quick Actions */}

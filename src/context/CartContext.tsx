@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
@@ -8,6 +8,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image_url?: string;
+  notes?: string;
 }
 
 interface CartContextType {

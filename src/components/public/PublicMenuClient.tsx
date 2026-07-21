@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, AlertCircle, Search, Star, Leaf, Flame, WheatOff, MapPin, Phone, X } from 'lucide-react';
+import { ShoppingBag, AlertCircle, Search, Star, Leaf, Flame, WheatOff, MapPin, Phone, X, Heart, Clock, Sparkles } from 'lucide-react';
 import { CartProvider, useCart } from '@/context/CartContext';
 import CartDrawer from './CartDrawer';
 import AddToCartButton from './AddToCartButton';
@@ -61,6 +61,8 @@ function MenuContent({
   const { totalItems } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'favs' | 'recommended' | 'vegetarian' | 'spicy' | 'gluten_free'>('all');
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   const [activeCategory, setActiveCategory] = useState<string | null>(
@@ -69,6 +71,27 @@ function MenuContent({
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const currency = restaurant.currency || 'Q';
+
+  // Load favorites from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`karta-favs-${restaurant.slug}`);
+      if (saved) setFavorites(JSON.parse(saved));
+    } catch (e) {
+      console.error('Error loading favorites:', e);
+    }
+  }, [restaurant.slug]);
+
+  const toggleFavorite = (itemId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavorites((prev) => {
+      const updated = prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId];
+      localStorage.setItem(`karta-favs-${restaurant.slug}`, JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   // IntersectionObserver for active category detection
   useEffect(() => {
@@ -98,16 +121,26 @@ function MenuContent({
   const getName = (item: { name: string; name_en?: string }) => (locale === 'en' && item.name_en ? item.name_en : item.name);
   const getDesc = (item: { description?: string | null; description_en?: string | null }) => (locale === 'en' && item.description_en ? item.description_en : item.description);
 
-  // Filter categories and menu items by search query
+  // Filter categories and menu items by search query and tag filter
   const filteredCategories = categories.map((cat) => {
     const matchingItems = cat.menu_items.filter((item) => {
       const name = getName(item).toLowerCase();
       const desc = (getDesc(item) || '').toLowerCase();
       const query = searchQuery.toLowerCase().trim();
-      return name.includes(query) || desc.includes(query);
+      const matchesSearch = name.includes(query) || desc.includes(query);
+
+      if (!matchesSearch) return false;
+
+      if (activeFilter === 'favs') return favorites.includes(item.id);
+      if (activeFilter === 'recommended') return item.is_recommended;
+      if (activeFilter === 'vegetarian') return item.is_vegetarian;
+      if (activeFilter === 'spicy') return item.is_spicy;
+      if (activeFilter === 'gluten_free') return item.is_gluten_free;
+
+      return true;
     });
     return { ...cat, menu_items: matchingItems };
-  }).filter((cat) => searchQuery.trim() === '' || cat.menu_items.length > 0);
+  }).filter((cat) => searchQuery.trim() === '' && activeFilter === 'all' || cat.menu_items.length > 0);
 
   return (
     <div className='min-h-screen bg-background pb-32'>
@@ -129,74 +162,123 @@ function MenuContent({
               <img
                 src={restaurant.logo_url}
                 alt={restaurant.name}
-                className='w-24 h-24 rounded-full object-cover mx-auto -mt-20 mb-4 border-4 border-background shadow-2xl'
+                className='w-24 h-24 rounded-2xl mx-auto mb-4 border-2 border-white/20 shadow-2xl object-cover -mt-16 bg-surface-container-lowest'
               />
             )}
-            <h1 className='text-3xl font-serif font-bold mb-2 text-gradient-ember'>{restaurant.name}</h1>
+            <h1 className='text-3xl font-serif font-bold text-gradient-ember mb-2'>{restaurant.name}</h1>
             {restaurant.description && (
-              <p className='text-sm text-foreground/60 leading-relaxed max-w-md mx-auto mb-4'>
-                {restaurant.description}
-              </p>
+              <p className='text-xs text-foreground/60 mb-4 max-w-md mx-auto leading-relaxed'>{restaurant.description}</p>
             )}
 
-            <div className='flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-foreground/50 pt-2 border-t border-white/5'>
-              {restaurant.address && (
-                <span className='flex items-center gap-1.5'><MapPin size={14} className='text-primary' /> {restaurant.address}</span>
-              )}
-              {restaurant.phone && (
-                <span className='flex items-center gap-1.5'><Phone size={14} className='text-accent-emerald' /> {restaurant.phone}</span>
-              )}
+            <div className='flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-white/5'>
+              <span className='inline-flex items-center gap-1 text-[11px] font-extrabold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'>
+                <span className='w-2 h-2 rounded-full bg-emerald-400 animate-pulse' /> Abierto Ahora
+              </span>
+
               {tableParam && (
-                <span className='bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-xs'>
-                  📍 Mesa #{tableParam}
+                <span className='inline-flex items-center gap-1 text-[11px] font-extrabold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20'>
+                  Mesa #{tableParam}
                 </span>
               )}
-            </div>
-
-            <div className='flex items-center justify-center gap-3 mt-4'>
-              <ThemeToggle />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sticky Search & Category Bar */}
-      <div className='sticky top-0 z-30 py-3 px-4 glass border-b border-white/5 mt-6 backdrop-blur-xl'>
-        <div className='max-w-xl mx-auto space-y-3'>
-          {/* Search Input */}
-          <div className='relative'>
-            <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30' size={18} />
-            <input
-              type='text'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder='Buscar plato, ingrediente...'
-              className='w-full bg-surface-container-lowest/80 border border-white/5 rounded-2xl py-3 pl-12 pr-10 focus:ring-2 focus:ring-primary outline-none transition-all text-sm'
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className='absolute right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground'
-              >
-                <X size={16} />
-              </button>
-            )}
+      {/* Sticky Navigation & Search Bar */}
+      <div className='sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4 transition-all mt-6'>
+        <div className='max-w-4xl mx-auto px-6 space-y-3'>
+          <div className='flex items-center gap-3'>
+            <div className='relative flex-1'>
+              <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40' size={18} />
+              <input
+                type='text'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('searchPlaceholder') || 'Buscar platos...'}
+                className='w-full bg-surface-container-lowest border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className='absolute right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground'
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            <div className='flex items-center gap-2'>
+              <ThemeToggle />
+            </div>
+          </div>
+
+          {/* Tag Filter Pills */}
+          <div className='flex items-center gap-2 overflow-x-auto hide-scrollbar pt-1 pb-1'>
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                activeFilter === 'all' ? 'bg-gradient-ember text-white shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              Todos
+            </button>
+            <button
+              onClick={() => setActiveFilter('favs')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeFilter === 'favs' ? 'bg-pink-600 text-white shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <Heart size={14} className={favorites.length > 0 ? 'fill-current text-pink-400' : ''} /> Favoritos ({favorites.length})
+            </button>
+            <button
+              onClick={() => setActiveFilter('recommended')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeFilter === 'recommended' ? 'bg-amber-500 text-black shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <Star size={14} className='fill-current' /> Recomendados
+            </button>
+            <button
+              onClick={() => setActiveFilter('vegetarian')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeFilter === 'vegetarian' ? 'bg-emerald-600 text-white shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <Leaf size={14} /> Vegetariano
+            </button>
+            <button
+              onClick={() => setActiveFilter('spicy')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeFilter === 'spicy' ? 'bg-red-600 text-white shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <Flame size={14} /> Picantes
+            </button>
+            <button
+              onClick={() => setActiveFilter('gluten_free')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeFilter === 'gluten_free' ? 'bg-blue-600 text-white shadow-md' : 'glass text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              <WheatOff size={14} /> Sin Gluten
+            </button>
           </div>
 
           {/* Category Tabs */}
-          {categories.length > 0 && !searchQuery && (
-            <div className='flex gap-2 overflow-x-auto hide-scrollbar py-1'>
+          {activeFilter === 'all' && !searchQuery && (
+            <div className='flex items-center gap-2 overflow-x-auto hide-scrollbar pt-2'>
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
-                  className={`relative px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     activeCategory === cat.id
-                      ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                      : 'bg-white/5 text-foreground/50 hover:bg-white/10'
+                      ? 'bg-white text-zinc-900 shadow-lg scale-105'
+                      : 'glass text-foreground/50 hover:text-foreground'
                   }`}
                 >
-                  {getName(cat)}
+                  {locale === 'en' && cat.name_en ? cat.name_en : cat.name}
                 </button>
               ))}
             </div>
@@ -256,9 +338,22 @@ function MenuContent({
                           <h3 className='font-bold text-base leading-snug flex items-center gap-1.5'>
                             {getName(item)}
                           </h3>
-                          <span className='text-primary font-serif font-bold whitespace-nowrap text-base'>
-                            {currency}{item.price.toFixed(2)}
-                          </span>
+                          <div className='flex items-center gap-2'>
+                            <button
+                              onClick={(e) => toggleFavorite(item.id, e)}
+                              className={`p-1.5 rounded-full transition-all cursor-pointer ${
+                                favorites.includes(item.id)
+                                  ? 'bg-pink-500/20 text-pink-500'
+                                  : 'text-foreground/20 hover:text-pink-400 hover:bg-white/5'
+                              }`}
+                              title={favorites.includes(item.id) ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+                            >
+                              <Heart size={16} className={favorites.includes(item.id) ? 'fill-current' : ''} />
+                            </button>
+                            <span className='text-primary font-serif font-bold whitespace-nowrap text-base'>
+                              {currency}{item.price.toFixed(2)}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Badges */}

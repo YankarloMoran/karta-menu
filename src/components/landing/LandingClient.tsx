@@ -196,6 +196,90 @@ export default function LandingClient({ locale }: { locale: string }) {
             </Link>
           </motion.div>
 
+          {/* Interactive Live Smartphone Mockup */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className='mt-16 max-w-sm mx-auto'
+          >
+            <div className='relative mx-auto border-zinc-800 bg-zinc-950 border-[12px] rounded-[48px] h-[580px] w-[300px] shadow-2xl shadow-primary/20 overflow-hidden text-left flex flex-col'>
+              {/* Phone Speaker Notch */}
+              <div className='w-28 h-5 bg-zinc-900 rounded-b-2xl mx-auto absolute top-0 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center'>
+                <div className='w-8 h-1 rounded-full bg-zinc-800' />
+              </div>
+
+              {/* Live App Display Mockup */}
+              <div className='pt-8 pb-4 px-4 bg-background flex-1 overflow-y-auto hide-scrollbar space-y-4'>
+                <div className='text-center pt-2 pb-1 border-b border-white/5'>
+                  <span className='text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20'>
+                    🟢 DEMO EN VIVO
+                  </span>
+                  <h4 className='text-base font-serif font-bold text-gradient-ember mt-1'>La Parrilla de Oro</h4>
+                  <p className='text-[10px] text-foreground/40'>Mesa #4 • Asunción, Guatemala</p>
+                </div>
+
+                {/* Filter pills demo */}
+                <div className='flex gap-1.5 overflow-x-auto hide-scrollbar text-[9px] font-bold'>
+                  <span className='bg-gradient-ember text-white px-2.5 py-1 rounded-lg whitespace-nowrap'>Todos</span>
+                  <span className='glass text-amber-400 px-2.5 py-1 rounded-lg whitespace-nowrap'>⭐ Top</span>
+                  <span className='glass text-emerald-400 px-2.5 py-1 rounded-lg whitespace-nowrap'>🌱 Veg</span>
+                </div>
+
+                {/* Sample items */}
+                <div className='space-y-2.5'>
+                  <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
+                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
+                      🥩
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex justify-between items-center'>
+                        <h5 className='text-xs font-bold truncate'>Puyazo Importado 300g</h5>
+                        <span className='text-xs font-serif font-bold text-primary'>Q145</span>
+                      </div>
+                      <p className='text-[9px] text-foreground/40 truncate mt-0.5'>Corte prémium al carbón con papas</p>
+                    </div>
+                  </div>
+
+                  <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
+                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
+                      🍔
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex justify-between items-center'>
+                        <h5 className='text-xs font-bold truncate'>Burger Kartá Doble</h5>
+                        <span className='text-xs font-serif font-bold text-primary'>Q85</span>
+                      </div>
+                      <p className='text-[9px] text-foreground/40 truncate mt-0.5'>Carne angus, queso cheddar fundido</p>
+                    </div>
+                  </div>
+
+                  <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
+                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
+                      🍹
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex justify-between items-center'>
+                        <h5 className='text-xs font-bold truncate'>Mojito Artesanal</h5>
+                        <span className='text-xs font-serif font-bold text-primary'>Q45</span>
+                      </div>
+                      <p className='text-[9px] text-foreground/40 truncate mt-0.5'>Menta fresca, ron añejo y lima</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='pt-2'>
+                  <Link
+                    href='/register'
+                    className='w-full bg-gradient-ember text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md'
+                  >
+                    <Sparkles size={12} /> Probar Crear Mi Menú
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Stats Bar */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -211,6 +295,49 @@ export default function LandingClient({ locale }: { locale: string }) {
             ))}
           </motion.div>
         </div>
+      </section>
+
+      {/* ===== COMPARISON VS TRADITIONAL PDF ===== */}
+      <section className='py-16 px-6 max-w-5xl mx-auto'>
+        <AnimatedSection className='glass p-8 md:p-12 rounded-[40px] border border-white/10 space-y-8'>
+          <div className='text-center max-w-xl mx-auto'>
+            <span className='text-[10px] font-bold tracking-widest uppercase text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20'>
+              Ventaja Competitiva
+            </span>
+            <h2 className='text-3xl md:text-4xl font-serif font-bold mt-4 mb-2'>
+              ¿Por qué los restaurantes prefieren Kartá?
+            </h2>
+            <p className='text-xs md:text-sm text-foreground/50'>
+              Compara la velocidad y experiencia de Kartá frente a los PDFs o menús tradicionales.
+            </p>
+          </div>
+
+          <div className='grid md:grid-cols-2 gap-6 pt-4'>
+            <div className='p-6 rounded-3xl bg-red-500/5 border border-red-500/10 space-y-4'>
+              <h3 className='font-bold text-lg text-red-400 flex items-center gap-2'>
+                <X size={20} /> Menús PDF o Impresos
+              </h3>
+              <ul className='space-y-2.5 text-xs text-foreground/60'>
+                <li className='flex items-start gap-2'>❌ Descargas lentas de 10MB a 20MB que agotan datos del cliente</li>
+                <li className='flex items-start gap-2'>❌ Imposible cambiar precios o platos sin volver a imprimir o resubir</li>
+                <li className='flex items-start gap-2'>❌ No permite pedir directamente por WhatsApp ni seleccionar mesa</li>
+                <li className='flex items-start gap-2'>❌ Se ve pequeño e incómodo de zoom en teléfonos</li>
+              </ul>
+            </div>
+
+            <div className='p-6 rounded-3xl bg-emerald-500/5 border border-emerald-500/20 space-y-4 shadow-lg shadow-emerald-500/5'>
+              <h3 className='font-bold text-lg text-emerald-400 flex items-center gap-2'>
+                <Check size={20} /> Menú Digital Kartá
+              </h3>
+              <ul className='space-y-2.5 text-xs text-foreground/80 font-medium'>
+                <li className='flex items-start gap-2'>⚡ Carga ultra rápida en menos de 0.2 segundos sin instalar apps</li>
+                <li className='flex items-start gap-2'>✏️ Actualiza precios, fotos y disponibilidad al instante desde tu teléfono</li>
+                <li className='flex items-start gap-2'>📲 Carrito interactivo con envío de pedidos a WhatsApp formateado</li>
+                <li className='flex items-start gap-2'>🏷️ Etiquetas dietéticas (Vegetariano, Picante, Sin Gluten, Recomendados)</li>
+              </ul>
+            </div>
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* ===== FEATURES ===== */}
