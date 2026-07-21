@@ -139,7 +139,8 @@ export async function ensureUserRestaurant(user: { id: string; user_metadata?: R
   let restaurantId = existingRest?.id;
 
   if (!restaurantId) {
-    const name = user.user_metadata?.full_name || 'Mi Restaurante';
+    const rawName = user.user_metadata?.full_name;
+    const name = typeof rawName === 'string' ? rawName : 'Mi Restaurante';
     const slug = name
       .toLowerCase()
       .normalize('NFD')
@@ -169,7 +170,7 @@ export async function ensureUserRestaurant(user: { id: string; user_metadata?: R
         {
           user_id: user.id,
           restaurant_id: restaurantId,
-          full_name: user.user_metadata?.full_name || 'Propietario',
+          full_name: typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : 'Propietario',
           role: 'owner',
         },
         { onConflict: 'user_id' }
