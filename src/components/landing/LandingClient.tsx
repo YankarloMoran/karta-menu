@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import { Utensils, Zap, BarChart3, QrCode, ArrowRight, Check, Sparkles, Users, ShoppingBag, Menu, X, Languages } from 'lucide-react';
+import { Utensils, Zap, BarChart3, QrCode, ArrowRight, Check, Sparkles, Users, ShoppingBag, Menu, X, Languages, Star, Leaf, Flame } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
