@@ -212,8 +212,8 @@ export default function LandingClient({ locale }: { locale: string }) {
               {/* Live App Display Mockup */}
               <div className='pt-8 pb-4 px-4 bg-background flex-1 overflow-y-auto hide-scrollbar space-y-4'>
                 <div className='text-center pt-2 pb-1 border-b border-white/5'>
-                  <span className='text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20'>
-                    🟢 DEMO EN VIVO
+                  <span className='text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 inline-flex items-center gap-1'>
+                    <span className='w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse' /> DEMO EN VIVO
                   </span>
                   <h4 className='text-base font-serif font-bold text-gradient-ember mt-1'>La Parrilla de Oro</h4>
                   <p className='text-[10px] text-foreground/40'>Mesa #4 • Asunción, Guatemala</p>
@@ -222,15 +222,15 @@ export default function LandingClient({ locale }: { locale: string }) {
                 {/* Filter pills demo */}
                 <div className='flex gap-1.5 overflow-x-auto hide-scrollbar text-[9px] font-bold'>
                   <span className='bg-gradient-ember text-white px-2.5 py-1 rounded-lg whitespace-nowrap'>Todos</span>
-                  <span className='glass text-amber-400 px-2.5 py-1 rounded-lg whitespace-nowrap'>⭐ Top</span>
-                  <span className='glass text-emerald-400 px-2.5 py-1 rounded-lg whitespace-nowrap'>🌱 Veg</span>
+                  <span className='glass text-amber-400 px-2.5 py-1 rounded-lg whitespace-nowrap flex items-center gap-1'><Star size={10} fill='currentColor' /> Destacados</span>
+                  <span className='glass text-emerald-400 px-2.5 py-1 rounded-lg whitespace-nowrap flex items-center gap-1'><Leaf size={10} /> Vegetariano</span>
                 </div>
 
                 {/* Sample items */}
                 <div className='space-y-2.5'>
                   <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
-                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
-                      🥩
+                    <div className='w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0'>
+                      <Utensils size={18} />
                     </div>
                     <div className='flex-1 min-w-0'>
                       <div className='flex justify-between items-center'>
@@ -242,8 +242,8 @@ export default function LandingClient({ locale }: { locale: string }) {
                   </div>
 
                   <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
-                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
-                      🍔
+                    <div className='w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0'>
+                      <Flame size={18} />
                     </div>
                     <div className='flex-1 min-w-0'>
                       <div className='flex justify-between items-center'>
@@ -255,8 +255,8 @@ export default function LandingClient({ locale }: { locale: string }) {
                   </div>
 
                   <div className='glass p-2.5 rounded-xl flex items-center gap-2.5'>
-                    <div className='w-11 h-11 rounded-lg bg-gradient-ember flex items-center justify-center text-lg flex-shrink-0'>
-                      🍹
+                    <div className='w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0'>
+                      <Sparkles size={18} />
                     </div>
                     <div className='flex-1 min-w-0'>
                       <div className='flex justify-between items-center'>
@@ -317,11 +317,19 @@ export default function LandingClient({ locale }: { locale: string }) {
               <h3 className='font-bold text-lg text-red-400 flex items-center gap-2'>
                 <X size={20} /> Menús PDF o Impresos
               </h3>
-              <ul className='space-y-2.5 text-xs text-foreground/60'>
-                <li className='flex items-start gap-2'>❌ Descargas lentas de 10MB a 20MB que agotan datos del cliente</li>
-                <li className='flex items-start gap-2'>❌ Imposible cambiar precios o platos sin volver a imprimir o resubir</li>
-                <li className='flex items-start gap-2'>❌ No permite pedir directamente por WhatsApp ni seleccionar mesa</li>
-                <li className='flex items-start gap-2'>❌ Se ve pequeño e incómodo de zoom en teléfonos</li>
+              <ul className='space-y-3 text-xs text-foreground/60'>
+                <li className='flex items-start gap-2.5'>
+                  <X size={16} className='text-red-400 flex-shrink-0 mt-0.5' /> Descargas lentas de 10MB a 20MB que agotan datos del cliente
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <X size={16} className='text-red-400 flex-shrink-0 mt-0.5' /> Imposible cambiar precios o platos sin volver a imprimir o resubir
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <X size={16} className='text-red-400 flex-shrink-0 mt-0.5' /> No permite pedir directamente por WhatsApp ni seleccionar mesa
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <X size={16} className='text-red-400 flex-shrink-0 mt-0.5' /> Se ve pequeño e incómodo de zoom en teléfonos
+                </li>
               </ul>
             </div>
 
@@ -329,11 +337,19 @@ export default function LandingClient({ locale }: { locale: string }) {
               <h3 className='font-bold text-lg text-emerald-400 flex items-center gap-2'>
                 <Check size={20} /> Menú Digital Kartá
               </h3>
-              <ul className='space-y-2.5 text-xs text-foreground/80 font-medium'>
-                <li className='flex items-start gap-2'>⚡ Carga ultra rápida en menos de 0.2 segundos sin instalar apps</li>
-                <li className='flex items-start gap-2'>✏️ Actualiza precios, fotos y disponibilidad al instante desde tu teléfono</li>
-                <li className='flex items-start gap-2'>📲 Carrito interactivo con envío de pedidos a WhatsApp formateado</li>
-                <li className='flex items-start gap-2'>🏷️ Etiquetas dietéticas (Vegetariano, Picante, Sin Gluten, Recomendados)</li>
+              <ul className='space-y-3 text-xs text-foreground/80 font-medium'>
+                <li className='flex items-start gap-2.5'>
+                  <Check size={16} className='text-emerald-400 flex-shrink-0 mt-0.5' /> Carga ultra rápida en menos de 0.2 segundos sin instalar aplicaciones
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <Check size={16} className='text-emerald-400 flex-shrink-0 mt-0.5' /> Actualiza precios, fotos y disponibilidad al instante desde tu teléfono
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <Check size={16} className='text-emerald-400 flex-shrink-0 mt-0.5' /> Carrito interactivo con envío de pedidos a WhatsApp formateado
+                </li>
+                <li className='flex items-start gap-2.5'>
+                  <Check size={16} className='text-emerald-400 flex-shrink-0 mt-0.5' /> Filtros por etiquetas dietéticas (Vegetariano, Picante, Sin Gluten, Recomendados)
+                </li>
               </ul>
             </div>
           </div>

@@ -118,7 +118,7 @@ export default async function DashboardPage({
     <div className='space-y-10 stagger-children'>
       <header className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
         <div>
-          <h1 className='text-3xl md:text-4xl font-serif font-bold text-gradient-ember mb-2'>{t(greetingKey)} 👋</h1>
+          <h1 className='text-3xl md:text-4xl font-serif font-bold text-gradient-ember mb-2'>{t(greetingKey)}</h1>
           <p className='text-foreground/50'>{t('subtitle')}</p>
         </div>
       </header>

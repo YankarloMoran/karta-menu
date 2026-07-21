@@ -38,22 +38,22 @@ export function getWhatsAppUrl({
     .join('\n');
 
   // 2. Order type label
-  let orderTypeLabel = '🪑 En Mesa';
-  if (orderType === 'takeout') orderTypeLabel = '🛍️ Para Llevar';
-  if (orderType === 'delivery') orderTypeLabel = `🛵 Domicilio: ${address || 'Dirección no especificada'}`;
-  if (orderType === 'table' && tableNumber) orderTypeLabel = `🪑 Mesa #${tableNumber}`;
+  let orderTypeLabel = 'En Mesa';
+  if (orderType === 'takeout') orderTypeLabel = 'Para Llevar';
+  if (orderType === 'delivery') orderTypeLabel = `Entrega a Domicilio: ${address || 'Dirección no especificada'}`;
+  if (orderType === 'table' && tableNumber) orderTypeLabel = `Mesa #${tableNumber}`;
 
   // 3. Build formatted message
-  let message = `🍽️ *NUEVO PEDIDO - ${restaurantName}*\n\n`;
-  message += `📌 *Tipo de Pedido:* ${orderTypeLabel}\n\n`;
-  message += `🛒 *Detalle del Pedido:*\n${itemsText}\n\n`;
-  message += `💰 *TOTAL:* *${currency}${total.toFixed(2)}*\n`;
+  let message = `NUEVO PEDIDO - ${restaurantName}\n\n`;
+  message += `Tipo de Pedido: ${orderTypeLabel}\n\n`;
+  message += `Detalle del Pedido:\n${itemsText}\n\n`;
+  message += `TOTAL: ${currency}${total.toFixed(2)}\n`;
 
   if (specialNotes.trim()) {
-    message += `\n📝 *Notas para la cocina:* ${specialNotes.trim()}\n`;
+    message += `\nNotas adicionales: ${specialNotes.trim()}\n`;
   }
 
-  message += `\n_Enviado desde el Menú Digital Kartá_`;
+  message += `\nEnviado desde la plataforma Kartá`;
 
   // 4. Clean and encode phone
   const cleanPhone = restaurantPhone.replace(/\D/g, '');
