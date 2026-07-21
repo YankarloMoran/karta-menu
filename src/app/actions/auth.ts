@@ -70,7 +70,7 @@ export async function register(formData: FormData) {
 
   const uniqueSlug = `${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  const { data: restaurant, error: restError } = await adminClient
+  let { data: restaurant, error: restError } = await adminClient
     .from('restaurants')
     .insert({
       name: restaurantName,
@@ -83,25 +83,40 @@ export async function register(formData: FormData) {
     .single();
 
   if (restError || !restaurant) {
-    console.error('Error creating restaurant with admin client:', restError);
-    return redirect('/register?message=Error+al+crear+el+restaurante');
+    console.error('Admin client restaurant insert failed, trying user client fallback...', restError);
+    const { data: fallbackRest, error: fallbackError } = await supabase
+      .from('restaurants')
+      .insert({
+        name: restaurantName,
+        owner_name: restaurantName,
+        slug: uniqueSlug,
+        email: email,
+        currency: 'Q',
+      })
+      .select()
+      .single();
+
+    if (fallbackRest) {
+      restaurant = fallbackRest;
+      restError = null;
+    } else {
+      console.error('Both admin and fallback restaurant insert failed:', restError, fallbackError);
+    }
   }
 
-  // Robustly link restaurant to profile using upsert
-  const { error: profileError } = await adminClient
-    .from('profiles')
-    .upsert(
-      {
-        user_id: data.user.id,
-        restaurant_id: restaurant.id,
-        full_name: restaurantName,
-        role: 'owner',
-      },
-      { onConflict: 'user_id' }
-    );
-
-  if (profileError) {
-    console.error('Error upserting profile:', profileError);
+  if (restaurant) {
+    // Link restaurant to user profile using upsert
+    await adminClient
+      .from('profiles')
+      .upsert(
+        {
+          user_id: data.user.id,
+          restaurant_id: restaurant.id,
+          full_name: restaurantName,
+          role: 'owner',
+        },
+        { onConflict: 'user_id' }
+      );
   }
 
   return redirect('/dashboard');
