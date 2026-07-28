@@ -1,269 +1,262 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, ShoppingBag, Trash2, MessageCircle, Utensils, MapPin, Bike, FileText } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
-import { useTranslations } from 'next-intl';
-import { getWhatsAppUrl } from '@/lib/utils/whatsapp';
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { OrderItem, Restaurant } from '@/lib/types/database';
+import { generateWhatsAppOrderUrl } from '@/lib/utils/whatsapp';
+import { ShoppingBag, X, Trash2, Send, Plus, Minus, MapPin, User, MessageSquare } from 'lucide-react';
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  restaurantName: string;
-  restaurantPhone: string;
-  currency?: string;
-  initialTable?: string;
+  onOpen: () => void;
+  items: OrderItem[];
+  onUpdateQuantity: (index: number, newQty: number) => void;
+  onRemoveItem: (index: number) => void;
+  onClearCart: () => void;
+  restaurant: Restaurant;
+  tableNumber: string | null;
 }
 
-export default function CartDrawer({
+export const CartDrawer: React.FC<CartDrawerProps> = ({
   isOpen,
   onClose,
-  restaurantName,
-  restaurantPhone,
-  currency = 'Q',
-  initialTable = '',
-}: CartDrawerProps) {
-  const { items, removeItem, updateQuantity, clearCart, totalPrice, totalItems } = useCart();
-  const t = useTranslations('Menu');
-  const [tableNumber, setTableNumber] = useState(initialTable);
-  const [orderType, setOrderType] = useState<'table' | 'takeout' | 'delivery'>('table');
-  const [deliveryAddress, setDeliveryAddress] = useState('');
-  const [specialNotes, setSpecialNotes] = useState('');
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  onOpen,
+  items,
+  onUpdateQuantity,
+  onRemoveItem,
+  onClearCart,
+  restaurant,
+  tableNumber,
+}) => {
+  const [customerName, setCustomerName] = useState('');
+  const [notes, setNotes] = useState('');
+  const [currentTable, setCurrentTable] = useState(tableNumber || '04');
 
-  useEffect(() => {
-    if (initialTable) {
-      setTableNumber(initialTable);
-      setOrderType('table');
-    }
-  }, [initialTable]);
+  const totalItemsCount = items.reduce((acc, i) => acc + i.quantity, 0);
+  const totalAmount = items.reduce((acc, i) => acc + i.subtotal, 0);
 
-  const handleOrder = () => {
-    const url = getWhatsAppUrl({
+  const handleSendOrder = () => {
+    if (items.length === 0) return;
+
+    const url = generateWhatsAppOrderUrl({
+      phone: restaurant.phone_whatsapp,
+      restaurantName: restaurant.name,
+      tableNumber: currentTable,
+      customerName: customerName || undefined,
       items,
-      total: totalPrice,
-      restaurantName,
-      restaurantPhone,
-      tableNumber,
-      template: t('whatsappTemplate'),
-      currency,
-      orderType,
-      address: deliveryAddress,
-      specialNotes
+      totalAmount,
+      currency: restaurant.currency,
+      notes: notes || undefined,
     });
+
     window.open(url, '_blank');
-    setIsConfirmed(true);
-    clearCart();
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className='fixed inset-0 z-50 flex justify-end'>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className='absolute inset-0 bg-black/60 backdrop-blur-sm'
-          />
-
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className='relative w-full max-w-md h-full glass flex flex-col border-l border-white/5'
+    <>
+      {/* Floating Bottom Bar (Visible when cart has items and drawer is closed) */}
+      {!isOpen && items.length > 0 && (
+        <div className="fixed bottom-4 left-4 right-4 z-40 max-w-lg mx-auto animate-bounce-short">
+          <button
+            onClick={onOpen}
+            className="w-full glass-panel p-3.5 rounded-2xl flex items-center justify-between bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-2xl glow-accent border border-orange-400/40 hover:brightness-110 transition-all active:scale-98"
           >
-            {/* Header */}
-            <div className='flex items-center justify-between p-6 border-b border-white/5'>
-              <h2 className='text-xl font-serif font-bold flex items-center gap-2'>
-                <ShoppingBag size={20} className='text-primary' />
-                {t('viewOrder')}
-                {totalItems > 0 && (
-                  <span className='text-xs bg-primary/20 text-primary px-2.5 py-0.5 rounded-full font-bold'>{totalItems}</span>
-                )}
-              </h2>
-              <button onClick={onClose} className='p-2 text-foreground/40 hover:text-foreground/80 transition-colors cursor-pointer'>
-                <X size={24} />
-              </button>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-black/20 backdrop-blur-md flex items-center justify-center font-black text-sm">
+                {totalItemsCount}
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-semibold opacity-90">Ver Tu Pedido</p>
+                <p className="text-sm font-black">${totalAmount.toFixed(2)}</p>
+              </div>
             </div>
 
-            {/* Confirmed state */}
-            {isConfirmed ? (
-              <div className='flex-1 flex flex-col items-center justify-center p-8 text-center'>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', delay: 0.1 }}
-                  className='w-20 h-20 rounded-full bg-accent-emerald/10 flex items-center justify-center mb-6'
-                >
-                  <MessageCircle size={32} className='text-accent-emerald' />
-                </motion.div>
-                <h3 className='text-2xl font-serif font-bold mb-2'>{t('ordered')}</h3>
-                <p className='text-foreground/50 text-sm'>{t('orderedDesc')}</p>
+            <div className="flex items-center gap-1.5 bg-black/25 px-3.5 py-2 rounded-xl text-xs font-bold">
+              <span>Ordenar</span>
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Slide-over Drawer Backdrop & Panel */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-md transition-opacity">
+          <div className="glass-panel w-full max-w-md h-full flex flex-col justify-between shadow-2xl border-l border-slate-800 bg-[#090d16]/95">
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                  <ShoppingBag className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Tu Pedido</h3>
+                  <p className="text-xs text-slate-400">
+                    {totalItemsCount} platillos seleccionados
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {items.length > 0 && (
+                  <button
+                    onClick={onClearCart}
+                    className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-900 transition-colors text-xs flex items-center gap-1"
+                    title="Vaciar carrito"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
                 <button
-                  onClick={() => { setIsConfirmed(false); onClose(); }}
-                  className='mt-8 px-6 py-3 rounded-xl bg-white/5 text-foreground/60 font-bold hover:bg-white/10 transition-colors cursor-pointer'
+                  onClick={onClose}
+                  className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition-colors"
                 >
-                  Cerrar
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-            ) : items.length === 0 ? (
-              /* Empty state */
-              <div className='flex-1 flex flex-col items-center justify-center p-8 text-center'>
-                <ShoppingBag size={48} className='text-foreground/10 mb-4' />
-                <p className='text-foreground/40 font-medium'>{t('emptyCart')}</p>
-              </div>
-            ) : (
-              <>
-                {/* Items List */}
-                <div className='flex-1 overflow-y-auto p-6 space-y-3'>
-                  <AnimatePresence>
-                    {items.map((item) => (
-                      <motion.div
-                        key={item.id}
-                        layout
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0, padding: 0 }}
-                        className='flex gap-4 p-4 bg-white/5 rounded-2xl items-center border border-white/5'
-                      >
-                        {item.image_url && (
-                          <img src={item.image_url} className='w-14 h-14 rounded-xl object-cover flex-shrink-0' alt={item.name} />
-                        )}
-                        <div className='flex-1 min-w-0'>
-                          <h4 className='font-bold text-sm leading-snug truncate'>{item.name}</h4>
-                          <p className='text-primary font-serif font-bold text-sm mt-0.5'>
-                            {currency}{(item.price * item.quantity).toFixed(2)}
-                          </p>
-                        </div>
+            </div>
 
-                        <div className='flex items-center gap-1 bg-surface-container-lowest p-1 rounded-xl border border-white/5'>
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className='w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <span className='w-7 text-center font-bold text-xs'>{item.quantity}</span>
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className='w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-white/10 transition-colors cursor-pointer'
-                          >
-                            <Plus size={12} />
-                          </button>
-                        </div>
-
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          className='p-1.5 text-foreground/20 hover:text-red-400 transition-colors cursor-pointer'
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+            {/* Cart Items List */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+              {items.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
+                  <ShoppingBag className="w-12 h-12 stroke-1 mb-3 text-slate-600 animate-pulse" />
+                  <p className="text-sm font-semibold text-slate-300">Tu carrito está vacío</p>
+                  <p className="text-xs text-slate-500 mt-1 max-w-xs">
+                    Explora el menú y agrega tus platillos favoritos para enviar el pedido.
+                  </p>
                 </div>
+              ) : (
+                items.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col gap-2"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="text-sm font-bold text-white">{item.item_name}</h4>
+                      <span className="text-sm font-extrabold text-orange-400">
+                        ${item.subtotal.toFixed(2)}
+                      </span>
+                    </div>
 
-                {/* Footer Form & Controls */}
-                <div className='p-6 border-t border-white/5 space-y-4 max-h-[50vh] overflow-y-auto'>
-                  {/* Order Type Selector */}
-                  <div className='space-y-2'>
-                    <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40'>Tipo de Pedido</label>
-                    <div className='grid grid-cols-3 gap-2'>
+                    {item.selected_options && item.selected_options.length > 0 && (
+                      <div className="space-y-0.5 text-[11px] text-slate-400 bg-slate-950/50 p-2 rounded-lg border border-slate-800/50">
+                        {item.selected_options.map((opt, oIdx) => (
+                          <div key={oIdx} className="flex justify-between">
+                            <span>
+                              {opt.option_title}: {opt.value_name}
+                            </span>
+                            {opt.extra_price > 0 && (
+                              <span className="text-orange-400 font-medium">
+                                +${opt.extra_price.toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 p-1 rounded-lg">
+                        <button
+                          onClick={() => onUpdateQuantity(idx, item.quantity - 1)}
+                          className="p-1 text-slate-300 hover:text-white rounded"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="text-xs font-bold text-white px-1">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => onUpdateQuantity(idx, item.quantity + 1)}
+                          className="p-1 text-slate-300 hover:text-white rounded"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
                       <button
-                        type='button'
-                        onClick={() => setOrderType('table')}
-                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
-                          orderType === 'table' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
-                        }`}
+                        onClick={() => onRemoveItem(idx)}
+                        className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 px-2 py-1 rounded hover:bg-rose-500/10 transition-colors"
                       >
-                        <Utensils size={14} /> En Mesa
-                      </button>
-                      <button
-                        type='button'
-                        onClick={() => setOrderType('takeout')}
-                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
-                          orderType === 'takeout' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
-                        }`}
-                      >
-                        <ShoppingBag size={14} /> Llevar
-                      </button>
-                      <button
-                        type='button'
-                        onClick={() => setOrderType('delivery')}
-                        className={`py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all border cursor-pointer ${
-                          orderType === 'delivery' ? 'bg-primary/20 border-primary text-primary' : 'bg-surface-container-lowest border-white/5 text-foreground/50'
-                        }`}
-                      >
-                        <Bike size={14} /> Domicilio
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Quitar
                       </button>
                     </div>
                   </div>
+                ))
+              )}
 
-                  {/* Contextual Input */}
-                  {orderType === 'table' && (
-                    <div className='space-y-1.5'>
-                      <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40'>Número de Mesa</label>
-                      <input
-                        type='text'
-                        value={tableNumber}
-                        onChange={(e) => setTableNumber(e.target.value)}
-                        placeholder='Ej. Mesa 4, Terraza 2'
-                        className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
-                      />
-                    </div>
-                  )}
-
-                  {orderType === 'delivery' && (
-                    <div className='space-y-1.5'>
-                      <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40 flex items-center gap-1'>
-                        <MapPin size={12} /> Dirección de Entrega
-                      </label>
-                      <input
-                        type='text'
-                        value={deliveryAddress}
-                        onChange={(e) => setDeliveryAddress(e.target.value)}
-                        placeholder='Ej. Calle 5, Casa #12, Zona 10'
-                        className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
-                      />
-                    </div>
-                  )}
-
-                  {/* Notes for Kitchen */}
-                  <div className='space-y-1.5'>
-                    <label className='text-[10px] font-bold uppercase tracking-widest text-foreground/40 flex items-center gap-1'>
-                      <FileText size={12} /> Instrucciones Especiales (Opcional)
+              {/* Order Form Settings */}
+              {items.length > 0 && (
+                <div className="space-y-3 pt-4 border-t border-slate-800">
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
+                      <MapPin className="w-3 h-3 text-orange-400" />
+                      Número de Mesa
                     </label>
                     <input
-                      type='text'
-                      value={specialNotes}
-                      onChange={(e) => setSpecialNotes(e.target.value)}
-                      placeholder='Ej. Sin cebolla, aderezo aparte...'
-                      className='w-full bg-surface-container-lowest border border-white/5 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary transition-all'
+                      type="text"
+                      value={currentTable}
+                      onChange={(e) => setCurrentTable(e.target.value)}
+                      placeholder="Ej. 04"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
                   </div>
 
-                  <div className='flex justify-between items-center pt-2 border-t border-white/5'>
-                    <span className='text-sm text-foreground/50'>{t('total')}</span>
-                    <span className='text-2xl font-serif font-bold text-primary'>{currency}{totalPrice.toFixed(2)}</span>
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
+                      <User className="w-3 h-3 text-orange-400" />
+                      Tu Nombre (Opcional)
+                    </label>
+                    <input
+                      type="text"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      placeholder="Ej. Carlos Mendoza"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
+                    />
                   </div>
 
-                  <button
-                    onClick={handleOrder}
-                    className='w-full bg-gradient-ember text-white py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 cursor-pointer'
-                  >
-                    <MessageCircle size={20} /> Pedir por WhatsApp
-                  </button>
+                  <div>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1">
+                      <MessageSquare className="w-3 h-3 text-orange-400" />
+                      Notas o Alergias
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Ej. Sin cebolla, aderezo aparte..."
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 resize-none"
+                    />
+                  </div>
                 </div>
-              </>
+              )}
+            </div>
+
+            {/* Footer Submit */}
+            {items.length > 0 && (
+              <div className="p-4 border-t border-slate-800 bg-slate-950/90 space-y-3">
+                <div className="flex justify-between items-center text-sm font-bold text-white">
+                  <span>Total:</span>
+                  <span className="text-lg text-orange-400 font-extrabold">
+                    ${totalAmount.toFixed(2)} {restaurant.currency}
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleSendOrder}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg glow-accent active:scale-95"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Enviar Pedido por WhatsApp</span>
+                </button>
+              </div>
             )}
-          </motion.div>
+          </div>
         </div>
       )}
-    </AnimatePresence>
+    </>
   );
-}
-
+};

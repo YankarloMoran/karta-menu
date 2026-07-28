@@ -1,63 +1,58 @@
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  notes?: string;
-}
+import { OrderItem } from '@/lib/types/database';
 
-export function getWhatsAppUrl({
-  items,
-  total,
-  restaurantName,
-  restaurantPhone,
-  tableNumber,
-  template: _template,
-  currency = 'Q',
-  orderType = 'table',
-  address = '',
-  specialNotes = ''
-}: {
-  items: CartItem[];
-  total: number;
+export function generateWhatsAppOrderUrl(params: {
+  phone: string;
   restaurantName: string;
-  restaurantPhone: string;
-  tableNumber: string;
-  template: string;
+  tableNumber?: string;
+  customerName?: string;
+  items: OrderItem[];
+  totalAmount: number;
   currency?: string;
-  orderType?: 'table' | 'takeout' | 'delivery';
-  address?: string;
-  specialNotes?: string;
-}) {
-  // 1. Format the items list
-  const itemsText = items
-    .map(item => {
-      const noteTxt = item.notes ? ` _(${item.notes})_` : '';
-      return `• *${item.quantity}x* ${item.name}${noteTxt} - ${currency}${(item.price * item.quantity).toFixed(2)}`;
-    })
-    .join('\n');
+  notes?: string;
+}): string {
+  const {
+    phone,
+    restaurantName,
+    tableNumber,
+    customerName,
+    items,
+    totalAmount,
+    currency = 'USD',
+    notes,
+  } = params;
 
-  // 2. Order type label
-  let orderTypeLabel = 'En Mesa';
-  if (orderType === 'takeout') orderTypeLabel = 'Para Llevar';
-  if (orderType === 'delivery') orderTypeLabel = `Entrega a Domicilio: ${address || 'Dirección no especificada'}`;
-  if (orderType === 'table' && tableNumber) orderTypeLabel = `Mesa #${tableNumber}`;
+  const cleanPhone = phone.replace(/[^0-9]/g, '');
 
-  // 3. Build formatted message
-  let message = `NUEVO PEDIDO - ${restaurantName}\n\n`;
-  message += `Tipo de Pedido: ${orderTypeLabel}\n\n`;
-  message += `Detalle del Pedido:\n${itemsText}\n\n`;
-  message += `TOTAL: ${currency}${total.toFixed(2)}\n`;
+  let text = `👋 *¡Hola! Quisiera realizar un nuevo pedido en ${restaurantName}*\n\n`;
 
-  if (specialNotes.trim()) {
-    message += `\nNotas adicionales: ${specialNotes.trim()}\n`;
+  if (tableNumber) {
+    text += `📍 *Mesa:* #${tableNumber}\n`;
+  }
+  if (customerName) {
+    text += `👤 *Cliente:* ${customerName}\n`;
   }
 
-  message += `\nEnviado desde la plataforma Kartá`;
+  text += `\n🛒 *Detalle del Pedido:*\n`;
 
-  // 4. Clean and encode phone
-  const cleanPhone = restaurantPhone.replace(/\D/g, '');
+  items.forEach((item, index) => {
+    text += `\n${index + 1}. *${item.quantity}x ${item.item_name}* ($${item.unit_price.toFixed(2)} c/u)`;
 
-  // 5. Generate URL
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    if (item.selected_options && item.selected_options.length > 0) {
+      item.selected_options.forEach((opt) => {
+        const extra = opt.extra_price > 0 ? ` (+$${opt.extra_price.toFixed(2)})` : '';
+        text += `\n   └ _${opt.option_title}:_ ${opt.value_name}${extra}`;
+      });
+    }
+
+    text += `\n   *Subtotal:* $${item.subtotal.toFixed(2)}`;
+  });
+
+  if (notes) {
+    text += `\n\n📝 *Notas especiales:* ${notes}`;
+  }
+
+  text += `\n\n💰 *Total a Pagar:* *$${totalAmount.toFixed(2)} ${currency}*`;
+  text += `\n\n_Enviado desde Cartly App_ 🚀`;
+
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
 }
