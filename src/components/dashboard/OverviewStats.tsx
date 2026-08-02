@@ -28,16 +28,16 @@ export const OverviewStats: React.FC = () => {
       value: '3 En Cocina',
       change: '2 pendientes',
       isPositive: true,
-      icon: <ShoppingCart className="w-5 h-5 text-orange-400" />,
-      color: 'border-orange-500/30 bg-orange-500/5',
+      icon: <ShoppingCart className="w-5 h-5 text-cyan-400" />,
+      color: 'border-cyan-500/30 bg-cyan-500/5',
     },
     {
       title: 'Escaneos QR Hoy',
       value: '217 Vistas',
       change: '+28%',
       isPositive: true,
-      icon: <QrCode className="w-5 h-5 text-blue-400" />,
-      color: 'border-blue-500/30 bg-blue-500/5',
+      icon: <QrCode className="w-5 h-5 text-indigo-400" />,
+      color: 'border-indigo-500/30 bg-indigo-500/5',
     },
     {
       title: 'Platillo Estrella',
@@ -79,11 +79,11 @@ export const OverviewStats: React.FC = () => {
       </div>
 
       {/* Sales & Scans Chart */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+      <div className="glass-panel p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 bg-slate-950/70">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-orange-400" />
+              <TrendingUp className="w-4 h-4 text-cyan-400" />
               <span>Actividad de Ventas y Escaneos QR de Hoy</span>
             </h3>
             <p className="text-xs text-slate-400">
@@ -93,11 +93,11 @@ export const OverviewStats: React.FC = () => {
 
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-orange-500"></span>
+              <span className="w-3 h-3 rounded-md bg-indigo-500"></span>
               <span className="text-slate-300">Ventas ($)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-md bg-blue-500"></span>
+              <span className="w-3 h-3 rounded-md bg-cyan-400"></span>
               <span className="text-slate-300">Escaneos</span>
             </div>
           </div>
@@ -118,8 +118,8 @@ export const OverviewStats: React.FC = () => {
                   fontSize: '12px',
                 }}
               />
-              <Bar dataKey="ventas" fill="#f97316" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="escaneos" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="ventas" fill="#6366f1" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="escaneos" fill="#06b6d4" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

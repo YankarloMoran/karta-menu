@@ -80,7 +80,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="glass-panel w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[90vh]">
+      <div className="glass-panel w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-indigo-500/30 flex flex-col max-h-[90vh] bg-[#0b0f19]">
         {/* Header Image */}
         <div className="relative h-56 w-full bg-slate-950 flex-shrink-0">
           <img
@@ -101,7 +101,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           <div>
             <div className="flex items-start justify-between gap-4 mb-2">
               <h2 className="text-xl font-extrabold text-white">{item.name}</h2>
-              <span className="text-xl font-black text-orange-400">
+              <span className="text-xl font-black text-cyan-400">
                 ${unitPrice.toFixed(2)}
               </span>
             </div>
@@ -118,7 +118,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                       {opt.title}
                     </h4>
                     {opt.is_required && (
-                      <span className="text-[10px] font-semibold text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">
+                      <span className="text-[10px] font-semibold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
                         Requerido
                       </span>
                     )}
@@ -135,7 +135,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                           onClick={() => handleValueSelect(opt.id, val)}
                           className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs transition-all ${
                             isSelected
-                              ? 'bg-orange-500/15 border-orange-500/60 text-white font-semibold shadow-md'
+                              ? 'bg-indigo-500/20 border-indigo-500/60 text-white font-semibold shadow-md'
                               : 'bg-slate-900/60 border-slate-800/80 text-slate-300 hover:border-slate-700 hover:text-white'
                           }`}
                         >
@@ -143,7 +143,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                             <div
                               className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
                                 isSelected
-                                  ? 'border-orange-500 bg-orange-500 text-white'
+                                  ? 'border-indigo-500 bg-indigo-500 text-white'
                                   : 'border-slate-600 bg-transparent'
                               }`}
                             >
@@ -152,7 +152,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                             <span>{val.name}</span>
                           </div>
                           {val.extra_price > 0 && (
-                            <span className="text-orange-400 font-semibold">
+                            <span className="text-cyan-400 font-semibold">
                               +${val.extra_price.toFixed(2)}
                             </span>
                           )}
@@ -188,7 +188,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
           {/* Confirm Button */}
           <button
             onClick={handleConfirm}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-sm transition-all shadow-lg glow-accent active:scale-95"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-bold text-sm transition-all shadow-lg glow-accent active:scale-95"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>Agregar al Pedido (${totalPrice.toFixed(2)})</span>

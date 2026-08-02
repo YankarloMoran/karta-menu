@@ -9,6 +9,7 @@ import { CategoryBar } from '@/components/public/CategoryBar';
 import { MenuItemCard } from '@/components/public/MenuItemCard';
 import { ItemDetailModal } from '@/components/public/ItemDetailModal';
 import { CartDrawer } from '@/components/public/CartDrawer';
+import { OrderTrackerModal } from '@/components/public/OrderTrackerModal';
 import { Utensils } from 'lucide-react';
 
 function MenuContent() {
@@ -26,6 +27,12 @@ function MenuContent() {
   // Cart state
   const [cartItems, setCartItems] = useState<OrderItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Live Order Tracker Modal
+  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
+  const [trackerOrderId, setTrackerOrderId] = useState('');
+  const [trackerWhatsAppUrl, setTrackerWhatsAppUrl] = useState('');
+  const [trackerTable, setTrackerTable] = useState('04');
 
   const handleSelectItem = (item: MenuItem) => {
     setSelectedItemForModal(item);
@@ -73,6 +80,14 @@ function MenuContent() {
     setCartItems((prev) => prev.filter((_, idx) => idx !== index));
   };
 
+  const handleOrderSubmitted = (orderId: string, whatsAppUrl: string, table: string) => {
+    setTrackerOrderId(orderId);
+    setTrackerWhatsAppUrl(whatsAppUrl);
+    setTrackerTable(table);
+    setIsCartOpen(false);
+    setIsTrackerOpen(true);
+  };
+
   // Filter items
   const filteredItems = SAMPLE_MENU_ITEMS.filter((item) => {
     if (selectedCategoryId && item.category_id !== selectedCategoryId) return false;
@@ -96,7 +111,7 @@ function MenuContent() {
   });
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 pb-28">
+    <div className="min-h-screen bg-[#0b0f19] text-slate-100 pb-28">
       {/* Restaurant Public Header */}
       <PublicHeader restaurant={SAMPLE_RESTAURANT} tableNumber={tableParam} />
 
@@ -152,6 +167,18 @@ function MenuContent() {
         onClearCart={() => setCartItems([])}
         restaurant={SAMPLE_RESTAURANT}
         tableNumber={tableParam}
+        onOrderSubmitted={handleOrderSubmitted}
+      />
+
+      {/* Post-Order Live Tracker Modal */}
+      <OrderTrackerModal
+        isOpen={isTrackerOpen}
+        onClose={() => setIsTrackerOpen(false)}
+        orderId={trackerOrderId}
+        tableNumber={trackerTable}
+        items={cartItems}
+        totalAmount={cartItems.reduce((acc, i) => acc + i.subtotal, 0)}
+        whatsAppUrl={trackerWhatsAppUrl}
       />
     </div>
   );
@@ -161,7 +188,7 @@ export default function PublicMenuPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#090d16] flex items-center justify-center text-slate-400 text-xs">
+        <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center text-slate-400 text-xs">
           Cargando menú de Cartly...
         </div>
       }

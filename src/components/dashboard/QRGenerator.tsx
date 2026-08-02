@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { QrCode, Download, Printer, Copy, Check, Sparkles } from 'lucide-react';
+import { QrCode, Printer, Copy, Check, Sparkles, Wifi } from 'lucide-react';
 
 interface QRGeneratorProps {
   slug: string;
@@ -10,6 +10,7 @@ interface QRGeneratorProps {
 
 export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
   const [tableNumber, setTableNumber] = useState('04');
+  const [wifiPass, setWifiPass] = useState('BistroGourmet2026');
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +31,7 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
     <div className="max-w-4xl space-y-6">
       <div>
         <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
-          <QrCode className="w-5 h-5 text-orange-400" />
+          <QrCode className="w-5 h-5 text-cyan-400" />
           <span>Generador de Códigos QR para Mesas</span>
         </h2>
         <p className="text-xs text-slate-400">
@@ -40,7 +41,7 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {/* Controls Card */}
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
+        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5 bg-slate-950/70">
           <h3 className="text-sm font-bold text-white border-b border-slate-800 pb-2">
             Configuración de la Mesa
           </h3>
@@ -52,7 +53,21 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
               value={tableNumber}
               onChange={(e) => setTableNumber(e.target.value)}
               placeholder="Ej. 04, Barra 1, Terraza"
-              className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500"
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
+              <Wifi className="w-3.5 h-3.5 text-cyan-400" />
+              Clave de Wi-Fi para Clientes (Opcional)
+            </label>
+            <input
+              type="text"
+              value={wifiPass}
+              onChange={(e) => setWifiPass(e.target.value)}
+              placeholder="Ej. ClaveWifi123"
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -67,7 +82,7 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
               />
               <button
                 onClick={handleCopy}
-                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-orange-500/50 text-slate-300 hover:text-white transition-all"
+                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-white transition-all"
                 title="Copiar enlace"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -78,27 +93,27 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
           <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
             <button
               onClick={handlePrint}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-xs transition-all shadow-lg glow-accent active:scale-95"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold text-xs transition-all shadow-lg glow-accent active:scale-95"
             >
               <Printer className="w-4 h-4" />
-              <span>Imprimir QR</span>
+              <span>Imprimir Tarjeta de Mesa</span>
             </button>
           </div>
         </div>
 
         {/* Live Preview Card */}
         <div className="glass-panel p-8 rounded-3xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-6 shadow-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95">
-          <div className="flex items-center gap-1.5 text-xs text-orange-400 font-extrabold uppercase tracking-widest bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 text-xs text-cyan-300 font-extrabold uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>Escanea para Ver el Menú</span>
           </div>
 
           {/* QR Card Frame */}
           <div
             ref={qrRef}
-            className="bg-white p-6 rounded-3xl shadow-2xl border-4 border-orange-500/30 flex flex-col items-center gap-4 text-slate-900 w-64"
+            className="bg-white p-6 rounded-3xl shadow-2xl border-4 border-indigo-500/40 flex flex-col items-center gap-4 text-slate-900 w-64"
           >
-            <span className="font-extrabold text-sm text-slate-800 uppercase tracking-wider">
+            <span className="font-extrabold text-sm text-indigo-950 uppercase tracking-wider">
               Mesa #{tableNumber || '01'}
             </span>
 
@@ -107,15 +122,22 @@ export const QRGenerator: React.FC<QRGeneratorProps> = ({ slug }) => {
                 value={qrUrl}
                 size={180}
                 bgColor="#ffffff"
-                fgColor="#0f172a"
+                fgColor="#0b0f19"
                 level="H"
                 includeMargin={false}
               />
             </div>
 
-            <p className="text-[10px] text-slate-500 font-semibold tracking-tight">
-              MENU DIGITAL • ESCANEA EL CÓDIGO
-            </p>
+            <div className="text-center space-y-0.5">
+              <p className="text-[10px] text-slate-600 font-bold tracking-tight">
+                CARTLY • ESCANEA EL CÓDIGO
+              </p>
+              {wifiPass && (
+                <p className="text-[9px] text-indigo-700 font-semibold flex items-center justify-center gap-1">
+                  <Wifi className="w-2.5 h-2.5" /> Wi-Fi: {wifiPass}
+                </p>
+              )}
+            </div>
           </div>
 
           <p className="text-xs text-slate-400 max-w-xs">

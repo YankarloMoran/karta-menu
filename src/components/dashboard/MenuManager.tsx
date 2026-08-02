@@ -61,7 +61,7 @@ export const MenuManager: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
-            <UtensilsCrossed className="w-5 h-5 text-orange-400" />
+            <UtensilsCrossed className="w-5 h-5 text-cyan-400" />
             <span>Gestor de Categorías y Platillos</span>
           </h2>
           <p className="text-xs text-slate-400">
@@ -71,7 +71,7 @@ export const MenuManager: React.FC = () => {
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-xs shadow-lg glow-accent active:scale-95 transition-all self-start"
+          className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold text-xs shadow-lg glow-accent active:scale-95 transition-all self-start"
         >
           <Plus className="w-4 h-4" />
           <span>Nuevo Platillo</span>
@@ -84,7 +84,7 @@ export const MenuManager: React.FC = () => {
           onClick={() => setSelectedCatId(null)}
           className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
             selectedCatId === null
-              ? 'bg-orange-500 text-white shadow-md'
+              ? 'bg-indigo-600 text-white shadow-md'
               : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
           }`}
         >
@@ -98,7 +98,7 @@ export const MenuManager: React.FC = () => {
               onClick={() => setSelectedCatId(cat.id)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedCatId === cat.id
-                  ? 'bg-orange-500 text-white shadow-md'
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
@@ -115,7 +115,7 @@ export const MenuManager: React.FC = () => {
             key={item.id}
             className={`glass-panel p-4 rounded-2xl border ${
               item.is_available ? 'border-slate-800' : 'border-slate-800 opacity-60'
-            } flex flex-col justify-between space-y-4`}
+            } flex flex-col justify-between space-y-4 bg-slate-950/70`}
           >
             <div className="flex items-start gap-3">
               <img
@@ -126,7 +126,7 @@ export const MenuManager: React.FC = () => {
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <h4 className="text-sm font-bold text-white">{item.name}</h4>
-                  <span className="text-sm font-black text-orange-400">
+                  <span className="text-sm font-black text-cyan-400">
                     ${item.price.toFixed(2)}
                   </span>
                 </div>
@@ -170,7 +170,7 @@ export const MenuManager: React.FC = () => {
       {/* Add Item Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="glass-panel w-full max-w-md p-6 rounded-3xl border border-slate-800 space-y-4">
+          <div className="glass-panel w-full max-w-md p-6 rounded-3xl border border-indigo-500/30 bg-[#0b0f19] space-y-4">
             <h3 className="text-base font-bold text-white">Agregar Nuevo Platillo</h3>
             <form onSubmit={handleAddItem} className="space-y-3">
               <div>
@@ -230,7 +230,7 @@ export const MenuManager: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-orange-500 text-white text-xs font-bold shadow-lg"
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white text-xs font-bold shadow-lg"
                 >
                   Guardar Platillo
                 </button>

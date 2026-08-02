@@ -47,7 +47,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
   ];
 
   return (
-    <div className="sticky top-0 z-30 bg-[#090d16]/90 backdrop-blur-xl border-b border-slate-800/80 py-3 px-4 shadow-xl">
+    <div className="sticky top-0 z-30 bg-[#0b0f19]/90 backdrop-blur-xl border-b border-slate-800/80 py-3 px-4 shadow-xl">
       <div className="max-w-4xl mx-auto space-y-3">
         {/* Search Bar */}
         <div className="relative">
@@ -57,7 +57,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Buscar platillos, bebidas, ingredientes..."
-            className="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-orange-500/80 focus:ring-1 focus:ring-orange-500/50 transition-all"
+            className="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/50 transition-all"
           />
           {searchQuery && (
             <button
@@ -75,7 +75,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
             onClick={() => onSelectCategory(null)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               selectedCategoryId === null
-                ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg glow-accent scale-105'
+                ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg glow-accent scale-105'
                 : 'bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
             }`}
           >
@@ -91,7 +91,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
                 onClick={() => onSelectCategory(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isSelected
-                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg glow-accent scale-105'
+                    ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg glow-accent scale-105'
                     : 'bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
                 }`}
               >
@@ -105,7 +105,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
         {/* Dietary Tag Quick Filters */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
           <div className="flex items-center gap-1 text-[11px] text-slate-400 mr-1 flex-shrink-0">
-            <Filter className="w-3 h-3 text-orange-400" />
+            <Filter className="w-3 h-3 text-cyan-400" />
             <span>Filtros:</span>
           </div>
 
@@ -117,7 +117,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
                 onClick={() => onSelectTag(isSelected ? null : tag.key)}
                 className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all flex-shrink-0 ${
                   isSelected
-                    ? 'bg-orange-500/20 text-orange-400 border border-orange-500/50 font-semibold'
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-semibold'
                     : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:text-slate-200'
                 }`}
               >

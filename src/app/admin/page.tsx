@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Sidebar, DashboardTab } from '@/components/dashboard/Sidebar';
 import { OverviewStats } from '@/components/dashboard/OverviewStats';
 import { LiveOrdersKanban } from '@/components/dashboard/LiveOrdersKanban';
@@ -9,20 +10,36 @@ import { MenuManager } from '@/components/dashboard/MenuManager';
 import { RestaurantSettings } from '@/components/dashboard/RestaurantSettings';
 import { SAMPLE_RESTAURANT } from '@/lib/data/mockData';
 import { Restaurant } from '@/lib/types/database';
-import { Bell, Search, UserCheck } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { Bell, UserCheck } from 'lucide-react';
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [restaurant, setRestaurant] = useState<Restaurant>(SAMPLE_RESTAURANT);
 
+  const handleLogout = async () => {
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error(e);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cartly_demo_admin');
+    }
+    router.push('/login');
+  };
+
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col lg:flex-row">
       {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         restaurantName={restaurant.name}
         slug={restaurant.slug}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}
@@ -41,17 +58,17 @@ export default function AdminDashboardPage() {
 
           <div className="flex items-center gap-4">
             <button className="relative p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors">
-              <Bell className="w-4 h-4 text-orange-400" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-orange-500 animate-ping" />
+              <Bell className="w-4 h-4 text-cyan-400" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
             </button>
 
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
-              <div className="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold">
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-cyan-400 flex items-center justify-center font-bold">
                 <UserCheck className="w-4 h-4" />
               </div>
               <div className="hidden sm:block text-left">
                 <p className="font-bold text-white leading-none">Admin Chef</p>
-                <p className="text-[10px] text-slate-400">Gerente de Turno</p>
+                <p className="text-[10px] text-cyan-400 font-mono">Gerente de Turno</p>
               </div>
             </div>
           </div>

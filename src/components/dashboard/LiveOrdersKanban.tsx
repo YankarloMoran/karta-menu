@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Order, OrderStatus } from '@/lib/types/database';
 import { SAMPLE_ORDERS } from '@/lib/data/mockData';
-import { Clock, MapPin, CheckCircle, Flame, AlertCircle, ArrowRight, User } from 'lucide-react';
+import { Clock, CheckCircle, Flame, AlertCircle, ArrowRight, User } from 'lucide-react';
 
 export const LiveOrdersKanban: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>(SAMPLE_ORDERS);
@@ -15,8 +15,8 @@ export const LiveOrdersKanban: React.FC = () => {
   };
 
   const columns: { status: OrderStatus; label: string; color: string; badgeBg: string }[] = [
-    { status: 'pending', label: 'Pendientes', color: 'border-amber-500/40', badgeBg: 'bg-amber-500' },
-    { status: 'in_preparation', label: 'En Cocina', color: 'border-blue-500/40', badgeBg: 'bg-blue-500' },
+    { status: 'pending', label: 'Pendientes', color: 'border-cyan-500/40', badgeBg: 'bg-cyan-500' },
+    { status: 'in_preparation', label: 'En Cocina', color: 'border-indigo-500/40', badgeBg: 'bg-indigo-500' },
     { status: 'ready', label: 'Listos para Servir', color: 'border-emerald-500/40', badgeBg: 'bg-emerald-500' },
     { status: 'completed', label: 'Entregados', color: 'border-slate-700', badgeBg: 'bg-slate-600' },
   ];
@@ -26,7 +26,7 @@ export const LiveOrdersKanban: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
-            <Flame className="w-5 h-5 text-orange-400" />
+            <Flame className="w-5 h-5 text-cyan-400" />
             <span>Comandero en Vivo (KDS)</span>
           </h2>
           <p className="text-xs text-slate-400">
@@ -74,7 +74,7 @@ export const LiveOrdersKanban: React.FC = () => {
                         {/* Order Header info */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                            <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-indigo-500/20 text-cyan-300 border border-indigo-500/30">
                               Mesa #{ord.table_number || 'N/A'}
                             </span>
                             <span className="text-[11px] text-slate-400 font-mono">
@@ -93,7 +93,7 @@ export const LiveOrdersKanban: React.FC = () => {
                             {ord.customer_name || 'Comensal'}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-orange-400" />
+                            <Clock className="w-3 h-3 text-cyan-400" />
                             hace 5 min
                           </span>
                         </div>
@@ -103,7 +103,7 @@ export const LiveOrdersKanban: React.FC = () => {
                           {ord.items?.map((item, idx) => (
                             <div key={idx} className="flex justify-between text-slate-200">
                               <span>
-                                <strong className="text-orange-400">{item.quantity}x</strong>{' '}
+                                <strong className="text-cyan-400">{item.quantity}x</strong>{' '}
                                 {item.item_name}
                               </span>
                             </div>
@@ -111,8 +111,8 @@ export const LiveOrdersKanban: React.FC = () => {
                         </div>
 
                         {ord.notes && (
-                          <div className="text-[11px] p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 flex items-start gap-1">
-                            <AlertCircle className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
+                          <div className="text-[11px] p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 flex items-start gap-1">
+                            <AlertCircle className="w-3 h-3 text-indigo-400 flex-shrink-0 mt-0.5" />
                             <span>{ord.notes}</span>
                           </div>
                         )}
@@ -122,7 +122,7 @@ export const LiveOrdersKanban: React.FC = () => {
                           {ord.status === 'pending' && (
                             <button
                               onClick={() => updateOrderStatus(ord.id, 'in_preparation')}
-                              className="w-full flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow"
+                              className="w-full flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all shadow"
                             >
                               <span>Aceptar a Cocina</span>
                               <ArrowRight className="w-3.5 h-3.5" />
